@@ -10,51 +10,29 @@ public class LengthConversion extends Conversions {
     private HashMap<String, Double> centimeters = new HashMap<>();
     private HashMap<String, Double> kilometers = new HashMap<>();
 
-    private String formula;
-
     @Override
     public String convert(double valueIn) {
         fillMaps();
-        double[] calculation = calculate(valueIn);
-        setFormula(Double.toString(calculation[0]));
-        return(Double.toString(calculation[1]));
+        return(Double.toString(calculate(valueIn)));
     }
 
-    private double[] calculate(double valueIn) {
-        double multiplyVariable = 0.0;
+    private double calculate(double valueIn) {
         switch (super.getConversionType()) {
             case "mi":
-                multiplyVariable = miles.get(super.getConversionTypeTwo());
-                break;
+                return miles.get(super.getConversionTypeTwo()) * valueIn;
             case "ft":
-                multiplyVariable = feet.get(super.getConversionTypeTwo());
-                break;
+                return feet.get(super.getConversionTypeTwo()) * valueIn;
             case "in":
-                multiplyVariable = inches.get(super.getConversionTypeTwo());
-                break;
+                return inches.get(super.getConversionTypeTwo()) * valueIn;
             case "m":
-                multiplyVariable = meters.get(super.getConversionTypeTwo());
-                break;
+                return meters.get(super.getConversionTypeTwo()) * valueIn;
             case "cm":
-                multiplyVariable = centimeters.get(super.getConversionTypeTwo());
-                break;
+                return centimeters.get(super.getConversionTypeTwo()) * valueIn;
             case "km":
-                multiplyVariable = kilometers.get(super.getConversionTypeTwo());
-                break;
+                return kilometers.get(super.getConversionTypeTwo()) * valueIn;
             default:
-                break;
+                return 0.0;
         }
-        double[] output = {multiplyVariable, multiplyVariable * valueIn};
-        return(output);
-    }
-
-    public String getFormula() {
-        return this.formula;
-    }
-
-    private void setFormula(String number) {
-        this.formula = super.getConversionTypeTwo() + " = "
-                + super.getConversionType()+ " * " + number;
     }
 
     private void fillMaps() {
@@ -66,7 +44,6 @@ public class LengthConversion extends Conversions {
                     miles.put("m", 1609.34);
                     miles.put("cm", 160934.0);
                     miles.put("km", 1.60934);
-                    miles.put("mi", 1.0);
                 }
                 break;
             case  "ft":
@@ -76,7 +53,6 @@ public class LengthConversion extends Conversions {
                     feet.put("m", 0.3048);
                     feet.put("cm", 30.48);
                     feet.put("km", 0.0003048);
-                    feet.put("ft", 1.0);
                 }
                 break;
             case "in":
@@ -86,7 +62,6 @@ public class LengthConversion extends Conversions {
                     inches.put("m", 0.0254);
                     inches.put("cm", 2.54);
                     inches.put("km", 0.0000254);
-                    inches.put("in", 1.0);
                 }
                 break;
             case "m":
@@ -96,7 +71,6 @@ public class LengthConversion extends Conversions {
                     meters.put("mi", 0.000621371);
                     meters.put("cm", 100.0);
                     meters.put("km", 0.001);
-                    meters.put("m", 1.0);
                 }
                 break;
             case "cm":
@@ -106,7 +80,6 @@ public class LengthConversion extends Conversions {
                     centimeters.put("mi", 1609.34);
                     centimeters.put("m",160934.0);
                     centimeters.put("km", 1.60934);
-                    centimeters.put("cm", 1.0);
                 }
                 break;
             case "km":
@@ -116,7 +89,6 @@ public class LengthConversion extends Conversions {
                     kilometers.put("mi", 1609.34);
                     kilometers.put("cm", 160934.0);
                     kilometers.put("m", 1.60934);
-                    kilometers.put("km", 1.0);
                 }
                 break;
             default:
