@@ -5,7 +5,16 @@
     <string name="title_activity_main">MainActivity</string>
 
     <!-- Universal -->
-    <string name="to_et"> to </string>
+    <string name="to_tv"> To: </string>
+    <string name="from_tv"> From: </string>
+    <string name="do_tv">What would you like to convert?</string>
+    <string name="conversion_tv">Conversion output:</string>
+    <string-array name="type_spinner">
+        <item>Length</item>
+        <item>Speed</item>
+        <item>Mass</item>
+        <item>Temperature</item>
+    </string-array>
 
     <!--Speed Fragment-->
     <string-array name="speed_spinner_types">
