@@ -10,34 +10,34 @@
     <!--Speed Fragment-->
     <string-array name="speed_spinner_types">
         <item>mph</item>
-        <item>kph</item>
+        <item>km/h</item>
         <item>knots</item>
     </string-array>
 
     <!--Temperature Fragment-->
     <string-array name="temp_spinner_types">
-        <item>\u2103</item>
         <item>\u2109</item>
+        <item>\u2103</item>
         <item>\u212A</item>
     </string-array>
 
     <!--Length Fragment-->
     <string-array name="length_spinner_types">
-        <item>ft</item>
-        <item>mi</item>
-        <item>in</item>
-        <item>m</item>
-        <item>cm</item>
-        <item>km</item>
+        <item>feet</item>
+        <item>miles</item>
+        <item>inches</item>
+        <item>meters</item>
+        <item>centimeters</item>
+        <item>kilometers</item>
     </string-array>
 
     <!--Length Fragment-->
     <string-array name="mass_spinner_types">
-        <item>lb</item>
-        <item>oz</item>
-        <item>g</item>
-        <item>kg</item>
-        <item>mg</item>
+        <item>pounds</item>
+        <item>ounces</item>
+        <item>grams</item>
+        <item>kilograms</item>
+        <item>milligrams</item>
     </string-array>
 
 </resources>

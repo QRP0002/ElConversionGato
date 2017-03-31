@@ -2,7 +2,6 @@ package fragments.tabs;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +24,6 @@ public class LengthFragment extends Fragment implements View.OnKeyListener{
     private EditText mInputET;
     private Spinner mSpinnerOne, mSpinnerTwo;
     private ArrayList<String> lengthTypes = new ArrayList<>();
-    private static final String TAG = "LengthFragTAG";
 
     public static LengthFragment newInstance() {
         LengthFragment fragment = new LengthFragment();
@@ -35,12 +33,12 @@ public class LengthFragment extends Fragment implements View.OnKeyListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        lengthTypes.add("ft");
-        lengthTypes.add("mi");
-        lengthTypes.add("in");
-        lengthTypes.add("m");
-        lengthTypes.add("cm");
-        lengthTypes.add("km");
+        lengthTypes.add("feet");
+        lengthTypes.add("miles");
+        lengthTypes.add("inches");
+        lengthTypes.add("meters");
+        lengthTypes.add("centimeters");
+        lengthTypes.add("kilometers");
     }
 
     @Override

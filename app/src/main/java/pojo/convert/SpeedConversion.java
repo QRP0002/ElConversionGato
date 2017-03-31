@@ -8,18 +8,18 @@ public class SpeedConversion extends Conversions {
     private HashMap<String, Double> knots = new HashMap<>();
 
     @Override
-    public String convert(double speedIn) {
+    public String convert(double valueIn) {
         fillMap();
-        return (Double.toString(calculate(speedIn)));
+        return(super.appendType(Double.toString(calculate(valueIn))));
     }
 
     private double calculate(double valueIn) {
         switch (super.getConversionType()) {
-            case "lb":
+            case "mph":
                 return miles.get(super.getConversionTypeTwo()) * valueIn;
-            case "oz":
+            case "km/h":
                 return meters.get(super.getConversionTypeTwo()) * valueIn;
-            case "g":
+            case "knots":
                 return knots.get(super.getConversionTypeTwo()) * valueIn;
             default:
                 return 0.0;
@@ -30,11 +30,11 @@ public class SpeedConversion extends Conversions {
         switch (super.getConversionType()) {
             case "mph":
                 if(miles.isEmpty()){
-                    miles.put("kph", 1.60934);
+                    miles.put("km/h", 1.60934);
                     miles.put("knots", 0.868976);
                 }
                 break;
-            case  "kph":
+            case  "km/h":
                 if(meters.isEmpty()) {
                     meters.put("mph", 0.621371);
                     meters.put("knots", 0.539957);
@@ -43,7 +43,7 @@ public class SpeedConversion extends Conversions {
             case "knots":
                 if(knots.isEmpty()) {
                     knots.put("mph", 1.15078);
-                    knots.put("kph", 1.852);
+                    knots.put("km/h", 1.852);
                 }
                 break;
             default:
