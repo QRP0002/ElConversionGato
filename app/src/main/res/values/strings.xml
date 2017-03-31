@@ -4,39 +4,31 @@
     <string name="title_activity_single_fragment">SingleFragmentActivity</string>
     <string name="title_activity_main">MainActivity</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="icon_car">Car</string>
-
     <!-- Universal -->
-    <string name="convert_button">Convert</string>
     <string name="to_et"> to </string>
 
     <!--Speed Fragment-->
-    <string name="speed_formula_mph">Formula: KPH = MPH x 1.609344</string>
-    <string name="speed_formula_kph">Formula: MPH = KPH / 1.609344</string>
     <string-array name="speed_spinner_types">
-        <item>MPH</item>
-        <item>KPH</item>
-        <item>Knots</item>
+        <item>mph</item>
+        <item>kph</item>
+        <item>knots</item>
     </string-array>
 
     <!--Temperature Fragment-->
-    <string name="temp_formula_f">Formula: \u2103 = (\u2109 - 32) * (5/9)</string>
-    <string name="temp_formula_c">Formula: \u2109 = (\u2103 * (5/9)) + 32</string>
     <string-array name="temp_spinner_types">
-        <item>Cels.</item>
-        <item>Fahr.</item>
-        <item>Kel.</item>
+        <item>\u2103</item>
+        <item>\u2109</item>
+        <item>\u212A</item>
     </string-array>
 
     <!--Length Fragment-->
     <string-array name="length_spinner_types">
-        <item>Ft</item>
-        <item>Mi</item>
-        <item>In</item>
-        <item>M</item>
-        <item>CM</item>
-        <item>KM</item>
+        <item>ft</item>
+        <item>mi</item>
+        <item>in</item>
+        <item>m</item>
+        <item>cm</item>
+        <item>km</item>
     </string-array>
 
     <!--Length Fragment-->

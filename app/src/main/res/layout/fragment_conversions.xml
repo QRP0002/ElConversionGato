@@ -14,7 +14,7 @@
         android:orientation="horizontal">
 
         <EditText
-            android:id="@+id/speed_input_et"
+            android:id="@+id/conversion_input_et"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -22,11 +22,24 @@
             android:maxLines="1"/>
 
         <Spinner
-            android:id="@+id/speed_spinner"
+            android:id="@+id/first_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center">
+        </Spinner>
 
+        <TextView
+            android:id="@+id/to_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/to_et"/>
+
+        <Spinner
+            android:id="@+id/second_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center">
         </Spinner>
     </LinearLayout>
 
@@ -38,15 +51,10 @@
         android:orientation="vertical"
         >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/speed_formula_tv"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/speed_output_tv"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/conversion_output_tv"/>
     </LinearLayout>
 
 </LinearLayout>

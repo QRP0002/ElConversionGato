@@ -21,9 +21,11 @@ import pojo.convert.MassConversion;
 import pojo.helpers.SpinnerHelp;
 
 public class MassFragment extends Fragment implements View.OnKeyListener{
-    private TextView mFormulaTV, mOutcomeTV;
+    private TextView mOutcomeTV;
     private EditText mInputET;
     private Spinner mSpinnerOne, mSpinnerTwo;
+
+    private ArrayList<String> massTypes = new ArrayList<>();
 
     public static MassFragment newInstance() {
         MassFragment fragment = new MassFragment();
@@ -33,30 +35,26 @@ public class MassFragment extends Fragment implements View.OnKeyListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_length, container, false);
-
-        //TextView
-        mFormulaTV = (TextView) view.findViewById(R.id.length_formula_tv);
-        mOutcomeTV = (TextView) view.findViewById(R.id.length_output_tv);
-        //EditText
-        mInputET = (EditText) view.findViewById(R.id.length_input_et);
-        mInputET.setOnKeyListener(this);
-        //Spinner
-        ArrayList<String> massTypes = new ArrayList<>();
         massTypes.add("lb");
         massTypes.add("oz");
         massTypes.add("g");
         massTypes.add("kg");
         massTypes.add("mg");
+    }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_conversions, container, false);
+
+        //TextView
+        mOutcomeTV = (TextView) view.findViewById(R.id.conversion_output_tv);
+        //EditText
+        mInputET = (EditText) view.findViewById(R.id.conversion_input_et);
+        mInputET.setOnKeyListener(this);
+        //Spinner
         mSpinnerOne = (Spinner) view.findViewById(R.id.first_spinner);
         mSpinnerTwo = (Spinner) view.findViewById(R.id.second_spinner);
-
         ArrayAdapter<CharSequence> adapterOne = ArrayAdapter.createFromResource(getActivity(),
                 R.array.mass_spinner_types, android.R.layout.simple_spinner_item);
         adapterOne.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -96,7 +94,6 @@ public class MassFragment extends Fragment implements View.OnKeyListener{
                 mc.setConversionType(mSpinnerOne.getSelectedItem().toString());
                 mc.setConversionTypeTwo(mSpinnerTwo.getSelectedItem().toString());
                 mOutcomeTV.setText(mc.convert(Double.parseDouble(mInputET.getText().toString())));
-                mFormulaTV.setText(mc.getFormula());
                 return true;
             }
         }

@@ -11,50 +11,27 @@ public class MassConversion extends Conversions {
     private HashMap<String, Double> kilograms = new HashMap<>();
     private HashMap<String, Double> milligrams = new HashMap<>();
 
-    private final static String TAG = "LENGTH CONVERSION TAG";
-
-    private String formula;
-
     @Override
     public String convert(double valueIn) {
         fillMaps();
-        double[] calculation = calculate(valueIn);
-        setFormula(Double.toString(calculation[0]));
-        return(Double.toString(calculation[1]));
+        return(Double.toString(calculate(valueIn)));
     }
 
-    private double[] calculate(double valueIn) {
-        double multiplyVariable = 0.0;
+    private double calculate(double valueIn) {
         switch (super.getConversionType()) {
             case "lb":
-                multiplyVariable = pound.get(super.getConversionTypeTwo());
-                break;
+                return pound.get(super.getConversionTypeTwo()) * valueIn;
             case "oz":
-                multiplyVariable = ounces.get(super.getConversionTypeTwo());
-                break;
+                return ounces.get(super.getConversionTypeTwo()) * valueIn;
             case "g":
-                multiplyVariable = grams.get(super.getConversionTypeTwo());
-                break;
+                return grams.get(super.getConversionTypeTwo()) * valueIn;
             case "kg":
-                multiplyVariable = kilograms.get(super.getConversionTypeTwo());
-                break;
+                return kilograms.get(super.getConversionTypeTwo()) * valueIn;
             case "mg":
-                multiplyVariable = milligrams.get(super.getConversionTypeTwo());
-                break;
+                return milligrams.get(super.getConversionTypeTwo()) * valueIn;
             default:
-                break;
+                return 0.0;
         }
-        double[] output = {multiplyVariable, multiplyVariable * valueIn};
-        return(output);
-    }
-
-    private void setFormula(String number) {
-        this.formula = super.getConversionTypeTwo() + " = "
-                + super.getConversionType()+ " * " + number;
-    }
-
-    public String getFormula() {
-        return this.formula;
     }
 
     private void fillMaps() {
@@ -65,7 +42,6 @@ public class MassConversion extends Conversions {
                     pound.put("g", 453.592);
                     pound.put("kg", .0453592);
                     pound.put("mg", 453592.0);
-                    pound.put("lb", 1.0);
                 }
                 break;
             case  "oz":
@@ -74,7 +50,6 @@ public class MassConversion extends Conversions {
                     ounces.put("g", 28.3495);
                     ounces.put("kg", 0.0283495);
                     ounces.put("mg", 28349.5);
-                    ounces.put("oz", 1.0);
                 }
                 break;
             case "g":
@@ -83,7 +58,6 @@ public class MassConversion extends Conversions {
                     grams.put("oz", 0.035274);
                     grams.put("kg", 0.001);
                     grams.put("mg", 1000.0);
-                    grams.put("g", 1.0);
                 }
                 break;
             case "kg":
@@ -92,7 +66,6 @@ public class MassConversion extends Conversions {
                     kilograms.put("oz", 35.274);
                     kilograms.put("g", 1000.0);
                     kilograms.put("mg", 100000.0);
-                    kilograms.put("kg", 1.0);
                 }
                 break;
             case "mg":
@@ -101,7 +74,6 @@ public class MassConversion extends Conversions {
                     milligrams.put("oz", 0.000035274);
                     milligrams.put("g", 0.001);
                     milligrams.put("kg", 0.000001);
-                    milligrams.put("mg", 1.0);
                 }
                 break;
             default:

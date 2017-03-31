@@ -21,7 +21,7 @@ import pojo.convert.LengthConversion;
 import pojo.helpers.SpinnerHelp;
 
 public class LengthFragment extends Fragment implements View.OnKeyListener{
-    private TextView mFormulaTV, mOutcomeTV;
+    private TextView mOutcomeTV;
     private EditText mInputET;
     private Spinner mSpinnerOne, mSpinnerTwo;
     private ArrayList<String> lengthTypes = new ArrayList<>();
@@ -35,23 +35,22 @@ public class LengthFragment extends Fragment implements View.OnKeyListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        lengthTypes.add("Ft");
-        lengthTypes.add("Mi");
-        lengthTypes.add("In");
-        lengthTypes.add("M");
-        lengthTypes.add("CM");
-        lengthTypes.add("KM");
+        lengthTypes.add("ft");
+        lengthTypes.add("mi");
+        lengthTypes.add("in");
+        lengthTypes.add("m");
+        lengthTypes.add("cm");
+        lengthTypes.add("km");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_length, container, false);
+        View view = inflater.inflate(R.layout.fragment_conversions, container, false);
         //TextView
-        mFormulaTV = (TextView) view.findViewById(R.id.length_formula_tv);
-        mOutcomeTV = (TextView) view.findViewById(R.id.length_output_tv);
+        mOutcomeTV = (TextView) view.findViewById(R.id.conversion_output_tv);
         //EditText
-        mInputET = (EditText) view.findViewById(R.id.length_input_et);
+        mInputET = (EditText) view.findViewById(R.id.conversion_input_et);
         mInputET.setOnKeyListener(this);
         //Spinner
         mSpinnerOne = (Spinner) view.findViewById(R.id.first_spinner);
@@ -91,10 +90,9 @@ public class LengthFragment extends Fragment implements View.OnKeyListener{
         if(event.getAction() == KeyEvent.ACTION_DOWN) {
             if(keyCode == KeyEvent.KEYCODE_ENTER) {
                 LengthConversion lc = new LengthConversion();
-                lc.setConversionType(mSpinnerOne.getSelectedItem().toString());
+                lc.setConversionType(mSpinnerOne.getSelectedItem().toString()); 
                 lc.setConversionTypeTwo(mSpinnerTwo.getSelectedItem().toString());
                 mOutcomeTV.setText(lc.convert(Double.parseDouble(mInputET.getText().toString())));
-                mFormulaTV.setText(lc.getFormula());
                 return true;
             }
         }
