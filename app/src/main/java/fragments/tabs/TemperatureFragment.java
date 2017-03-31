@@ -37,8 +37,8 @@ public class TemperatureFragment extends Fragment implements View.OnKeyListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        tempType.add("\u2103"); //Far
-        tempType.add("\u2109"); //Cel
+        tempType.add("\u2109"); //Far
+        tempType.add("\u2103"); //Cel
         tempType.add("\u212A"); //Kel
     }
 
@@ -88,10 +88,10 @@ public class TemperatureFragment extends Fragment implements View.OnKeyListener{
     public boolean onKey(View v, int keyCode, KeyEvent event) {
         if(event.getAction() == KeyEvent.ACTION_DOWN) {
             if(keyCode == KeyEvent.KEYCODE_ENTER) {
-                LengthConversion lc = new LengthConversion();
-                lc.setConversionType(mSpinnerOne.getSelectedItem().toString());
-                lc.setConversionTypeTwo(mSpinnerTwo.getSelectedItem().toString());
-                mOutcomeTV.setText(lc.convert(Double.parseDouble(mInputET.getText().toString())));
+                TemperatureConversion tc = new TemperatureConversion();
+                tc.setConversionType(mSpinnerOne.getSelectedItem().toString());
+                tc.setConversionTypeTwo(mSpinnerTwo.getSelectedItem().toString());
+                mOutcomeTV.setText(tc.convert(Double.parseDouble(mInputET.getText().toString())));
 
                 return true;
             }

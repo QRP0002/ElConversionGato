@@ -13,22 +13,22 @@ public class LengthConversion extends Conversions {
     @Override
     public String convert(double valueIn) {
         fillMaps();
-        return(Double.toString(calculate(valueIn)));
+        return(super.appendType(Double.toString(calculate(valueIn))));
     }
 
     private double calculate(double valueIn) {
         switch (super.getConversionType()) {
-            case "mi":
+            case "miles":
                 return miles.get(super.getConversionTypeTwo()) * valueIn;
-            case "ft":
+            case "feet":
                 return feet.get(super.getConversionTypeTwo()) * valueIn;
-            case "in":
+            case "inches":
                 return inches.get(super.getConversionTypeTwo()) * valueIn;
-            case "m":
+            case "meters":
                 return meters.get(super.getConversionTypeTwo()) * valueIn;
-            case "cm":
+            case "centimeters":
                 return centimeters.get(super.getConversionTypeTwo()) * valueIn;
-            case "km":
+            case "kilometers":
                 return kilometers.get(super.getConversionTypeTwo()) * valueIn;
             default:
                 return 0.0;
@@ -37,58 +37,58 @@ public class LengthConversion extends Conversions {
 
     private void fillMaps() {
         switch (super.getConversionType()) {
-            case "mi":
+            case "miles":
                 if(miles.isEmpty()){
-                    miles.put("ft", 5280.0);
+                    miles.put("feet", 5280.0);
                     miles.put("in", 63360.0);
                     miles.put("m", 1609.34);
-                    miles.put("cm", 160934.0);
-                    miles.put("km", 1.60934);
+                    miles.put("centimeters", 160934.0);
+                    miles.put("kilometers", 1.60934);
                 }
                 break;
-            case  "ft":
+            case  "feet":
                 if(feet.isEmpty()) {
-                    feet.put("mi", 0.000189394);
+                    feet.put("miles", 0.000189394);
                     feet.put("in", 12.0);
                     feet.put("m", 0.3048);
-                    feet.put("cm", 30.48);
-                    feet.put("km", 0.0003048);
+                    feet.put("centimeters", 30.48);
+                    feet.put("kilometers", 0.0003048);
                 }
                 break;
             case "in":
                 if(inches.isEmpty()) {
-                    inches.put("ft", 0.0833333);
-                    inches.put("mi", 0.00001578);
-                    inches.put("m", 0.0254);
-                    inches.put("cm", 2.54);
-                    inches.put("km", 0.0000254);
+                    inches.put("feet", 0.0833333);
+                    inches.put("miles", 0.00001578);
+                    inches.put("meters", 0.0254);
+                    inches.put("centimeters", 2.54);
+                    inches.put("kilometers", 0.0000254);
                 }
                 break;
-            case "m":
+            case "meters":
                 if(meters.isEmpty()) {
-                    meters.put("ft", 3.28084);
-                    meters.put("in", 39.3701);
-                    meters.put("mi", 0.000621371);
-                    meters.put("cm", 100.0);
-                    meters.put("km", 0.001);
+                    meters.put("feet", 3.28084);
+                    meters.put("inches", 39.3701);
+                    meters.put("miles", 0.000621371);
+                    meters.put("centimeters", 100.0);
+                    meters.put("kilometers", 0.001);
                 }
                 break;
-            case "cm":
+            case "centimeters":
                 if(centimeters.isEmpty()) {
-                    centimeters.put("ft", 0.032808);
-                    centimeters.put("in", 63360.0);
-                    centimeters.put("mi", 1609.34);
-                    centimeters.put("m",160934.0);
-                    centimeters.put("km", 1.60934);
+                    centimeters.put("feet", 0.032808);
+                    centimeters.put("inches", 63360.0);
+                    centimeters.put("miles", 1609.34);
+                    centimeters.put("meters",160934.0);
+                    centimeters.put("kilometers", 1.60934);
                 }
                 break;
-            case "km":
+            case "kilometers":
                 if(kilometers.isEmpty()) {
-                    kilometers.put("ft", 5280.0);
-                    kilometers.put("in", 63360.0);
-                    kilometers.put("mi", 1609.34);
-                    kilometers.put("cm", 160934.0);
-                    kilometers.put("m", 1.60934);
+                    kilometers.put("feet", 5280.0);
+                    kilometers.put("inches", 63360.0);
+                    kilometers.put("miles", 1609.34);
+                    kilometers.put("centimeters", 160934.0);
+                    kilometers.put("meters", 1.60934);
                 }
                 break;
             default:

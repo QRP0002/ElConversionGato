@@ -2,7 +2,6 @@ package fragments.tabs;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,11 +34,11 @@ public class MassFragment extends Fragment implements View.OnKeyListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        massTypes.add("lb");
-        massTypes.add("oz");
-        massTypes.add("g");
-        massTypes.add("kg");
-        massTypes.add("mg");
+        massTypes.add("pounds");
+        massTypes.add("ounces");
+        massTypes.add("grams");
+        massTypes.add("kilograms");
+        massTypes.add("milligrams");
     }
 
     @Override

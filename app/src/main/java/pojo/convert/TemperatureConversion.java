@@ -1,7 +1,6 @@
 package pojo.convert;
 
-import android.util.Log;
-
+import com.fathzer.soft.javaluator.DoubleEvaluator;
 import java.util.HashMap;
 
 public class TemperatureConversion extends Conversions {
@@ -10,58 +9,57 @@ public class TemperatureConversion extends Conversions {
     private HashMap<String, String> kel = new HashMap<>();
 
     @Override
-    public String convert(double speedIn) {
+    public String convert(double valueIn) {
         fillMap();
-        return (Double.toString(calculate(speedIn)));
+        return(super.appendType(Double.toString(calculate(valueIn))));
     }
 
     private double calculate(double valueIn) {
-        double output = 0.0;
+        DoubleEvaluator evaluator = new DoubleEvaluator();
         switch (super.getConversionType()) {
-            case "far":
-                parse(valueIn, 'f', far.get(super.getConversionTypeTwo()));
-                break;
-            case "cel":
-                parse(valueIn, 'c', cel.get(super.getConversionTypeTwo()));
-                break;
-            case "kel":
-                parse(valueIn, 'k', kel.get(super.getConversionTypeTwo()));
-                break;
+            case "\u2109":
+                return(evaluator.evaluate(parse(valueIn,
+                        'f', far.get(super.getConversionTypeTwo()))));
+            case "\u2103":
+                return(evaluator.evaluate(parse(valueIn,
+                        'c', cel.get(super.getConversionTypeTwo()))));
+            case "\u212A":
+                return(evaluator.evaluate(parse(valueIn,
+                        'k', kel.get(super.getConversionTypeTwo()))));
             default:
-                break;
+                return 0.0;
         }
-        return output;
     }
 
     private String parse(double valueIn, char letter, String formula) {
         StringBuffer sb = new StringBuffer(formula);
         for (int i = 0; i < formula.length(); i++) {
             if(formula.charAt(i) == letter) {
+                sb.deleteCharAt(i);
                 sb.insert(i, valueIn);
             }
         }
-        Log.d("TESTINGSB", sb.toString());
         return (sb.toString());
     }
 
     private void fillMap() {
         switch (super.getConversionType()) {
-            case "far":
+            case "\u2109":
                 if(far.isEmpty()){
-                    far.put("cel", "(((f - 32) * 5) / 9)");
-                    far.put("kel", "((((f – 32) * 5) / 9) + 273.15)");
+                    far.put("\u2103", "(((f - 32.0) * 5) / 9)");
+                    far.put("\u212A", "((((f - 32.0) * 5) / 9) + 273.15)");
                 }
                 break;
-            case  "cel":
+            case  "\u2103":
                 if(cel.isEmpty()) {
-                    cel.put("far", "(((c * 9) / 5) + 32)");
-                    cel.put("kel", "(c + 273.15)");
+                    cel.put("\u2109", "(((c * 9) / 5) + 32.0)");
+                    cel.put("\u212A", "(c + 273.15)");
                 }
                 break;
-            case "kel":
+            case "\u212A":
                 if(kel.isEmpty()) {
-                    kel.put("far", "(((k * 9) / 5) - 459.67)");
-                    kel.put("cel", "(k - 273.15)");
+                    kel.put("\u2109", "(((k * 9) / 5) - 459.67)");
+                    kel.put("\u2103", "(k - 273.15)");
                 }
                 break;
             default:

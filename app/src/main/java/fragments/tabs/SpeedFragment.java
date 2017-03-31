@@ -34,7 +34,7 @@ public class SpeedFragment extends Fragment implements View.OnKeyListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         speedType.add("mph");
-        speedType.add("kph");
+        speedType.add("km/h");
         speedType.add("knots");
     }
 

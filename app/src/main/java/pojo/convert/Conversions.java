@@ -1,9 +1,5 @@
 package pojo.convert;
 
-/**
- * Created by quinn on 3/21/17.
- */
-
 public abstract class Conversions {
     private String conversionType;
     private String conversionTypeTwo;
@@ -22,6 +18,13 @@ public abstract class Conversions {
 
     public void setConversionType(String conversionType) {
         this.conversionType = conversionType;
+    }
+
+     String appendType(String inputStr) {
+        StringBuilder sb = new StringBuilder(inputStr);
+         sb.append(" ");
+         sb.append(conversionTypeTwo);
+        return (sb.toString());
     }
 
     public abstract String convert(double valueIn);
