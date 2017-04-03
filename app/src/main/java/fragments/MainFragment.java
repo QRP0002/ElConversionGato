@@ -34,9 +34,6 @@ public class MainFragment extends Fragment {
 
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setIcon(tabIcon[0]));
-        tabLayout.addTab(tabLayout.newTab().setIcon(tabIcon[1]));
-        tabLayout.addTab(tabLayout.newTab().setIcon(tabIcon[2]));
-        tabLayout.addTab(tabLayout.newTab().setIcon(tabIcon[3]));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.tab_pager);

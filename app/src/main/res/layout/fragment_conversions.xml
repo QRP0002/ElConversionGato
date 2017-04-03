@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    tools:context="fragments.tabs.SpeedFragment">
+    tools:context="fragments.tabs.ConversionFragment">
 
     <TextView
         android:layout_width="wrap_content"
@@ -32,9 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/from_tv"
-            android:paddingRight="20dp"
-            android:paddingLeft="20dp"/>
+            android:text="@string/from_tv" />
 
         <Spinner
             android:id="@+id/first_spinner"
@@ -47,9 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/to_tv"
-            android:paddingRight="20dp"
-            android:paddingLeft="20dp"/>
+            android:text="@string/to_tv" />
 
         <Spinner
             android:id="@+id/second_spinner"
