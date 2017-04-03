@@ -5,17 +5,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import fragments.tabs.LengthFragment;
-import fragments.tabs.MassFragment;
-import fragments.tabs.SpeedFragment;
-import fragments.tabs.TemperatureFragment;
+import fragments.tabs.ConversionFragment;
 
 /**
  * Created by quinn on 3/10/17.
  */
 
 public class MainPagerAdapter extends FragmentStatePagerAdapter {
-
     private Context context;
     int mTabNumbers;
 
@@ -29,17 +25,8 @@ public class MainPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                SpeedFragment sf = SpeedFragment.newInstance();
-                return sf;
-            case 1:
-                TemperatureFragment tf = TemperatureFragment.newInstance();
-                return tf;
-            case 2:
-                LengthFragment lf = LengthFragment.newInstance();
-                return lf;
-            case 3:
-                MassFragment mf = MassFragment.newInstance();
-                return mf;
+                ConversionFragment cf = ConversionFragment.newInstance();
+                return cf;
             default:
                 return null;
         }
