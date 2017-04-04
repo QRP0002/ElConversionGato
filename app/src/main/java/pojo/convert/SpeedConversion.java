@@ -1,5 +1,6 @@
 package pojo.convert;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 
 public class SpeedConversion extends Conversions {

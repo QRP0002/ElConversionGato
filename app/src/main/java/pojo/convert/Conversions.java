@@ -1,5 +1,7 @@
 package pojo.convert;
 
+import java.text.DecimalFormat;
+
 public abstract class Conversions {
     private String conversionType;
     private String conversionTypeTwo;
@@ -21,7 +23,9 @@ public abstract class Conversions {
     }
 
      String appendType(String inputStr) {
-        StringBuilder sb = new StringBuilder(inputStr);
+         DecimalFormat df = new DecimalFormat("##0.0#####");
+         String formattedStr = df.format(Double.parseDouble(inputStr));
+        StringBuilder sb = new StringBuilder(formattedStr);
          sb.append(" ");
          sb.append(conversionTypeTwo);
         return (sb.toString());
