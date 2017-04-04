@@ -1,8 +1,6 @@
 package pojo.convert;
 
-/**
- * Created by quinn on 3/21/17.
- */
+import java.text.DecimalFormat;
 
 public abstract class Conversions {
     private String conversionType;
@@ -22,6 +20,15 @@ public abstract class Conversions {
 
     public void setConversionType(String conversionType) {
         this.conversionType = conversionType;
+    }
+
+     String appendType(String inputStr) {
+         DecimalFormat df = new DecimalFormat("##0.0#####");
+         String formattedStr = df.format(Double.parseDouble(inputStr));
+        StringBuilder sb = new StringBuilder(formattedStr);
+         sb.append(" ");
+         sb.append(conversionTypeTwo);
+        return (sb.toString());
     }
 
     public abstract String convert(double valueIn);
