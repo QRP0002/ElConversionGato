@@ -1,8 +1,7 @@
 package pojo.convert;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
-
-import pojo.convert.Conversions;
 
 public class MassConversion extends Conversions {
     private HashMap<String, Double> pound = new HashMap<>();
@@ -11,97 +10,69 @@ public class MassConversion extends Conversions {
     private HashMap<String, Double> kilograms = new HashMap<>();
     private HashMap<String, Double> milligrams = new HashMap<>();
 
-    private final static String TAG = "LENGTH CONVERSION TAG";
-
-    private String formula;
-
     @Override
     public String convert(double valueIn) {
         fillMaps();
-        double[] calculation = calculate(valueIn);
-        setFormula(Double.toString(calculation[0]));
-        return(Double.toString(calculation[1]));
+        return(super.appendType(Double.toString(calculate(valueIn))));
     }
 
-    private double[] calculate(double valueIn) {
-        double multiplyVariable = 0.0;
+    private double calculate(double valueIn) {
         switch (super.getConversionType()) {
-            case "lb":
-                multiplyVariable = pound.get(super.getConversionTypeTwo());
-                break;
-            case "oz":
-                multiplyVariable = ounces.get(super.getConversionTypeTwo());
-                break;
-            case "g":
-                multiplyVariable = grams.get(super.getConversionTypeTwo());
-                break;
-            case "kg":
-                multiplyVariable = kilograms.get(super.getConversionTypeTwo());
-                break;
-            case "mg":
-                multiplyVariable = milligrams.get(super.getConversionTypeTwo());
-                break;
+            case "pounds":
+                return pound.get(super.getConversionTypeTwo()) * valueIn;
+            case "ounces":
+                return ounces.get(super.getConversionTypeTwo()) * valueIn;
+            case "grams":
+                return grams.get(super.getConversionTypeTwo()) * valueIn;
+            case "kilograms":
+                return kilograms.get(super.getConversionTypeTwo()) * valueIn;
+            case "milligrams":
+                return milligrams.get(super.getConversionTypeTwo()) * valueIn;
             default:
-                break;
+                return 0.0;
         }
-        double[] output = {multiplyVariable, multiplyVariable * valueIn};
-        return(output);
-    }
-
-    private void setFormula(String number) {
-        this.formula = super.getConversionTypeTwo() + " = "
-                + super.getConversionType()+ " * " + number;
-    }
-
-    public String getFormula() {
-        return this.formula;
     }
 
     private void fillMaps() {
         switch (super.getConversionType()) {
-            case "lb":
+            case "pounds":
                 if(pound.isEmpty()){
-                    pound.put("oz", 16.0);
-                    pound.put("g", 453.592);
-                    pound.put("kg", .0453592);
-                    pound.put("mg", 453592.0);
-                    pound.put("lb", 1.0);
+                    pound.put("ounces", 16.0);
+                    pound.put("grams", 453.592);
+                    pound.put("kilograms", .0453592);
+                    pound.put("milligrams", 453592.0);
                 }
                 break;
-            case  "oz":
+            case  "ounces":
                 if(ounces.isEmpty()) {
-                    ounces.put("lb", 0.0625);
-                    ounces.put("g", 28.3495);
-                    ounces.put("kg", 0.0283495);
-                    ounces.put("mg", 28349.5);
-                    ounces.put("oz", 1.0);
+                    ounces.put("pounds", 0.0625);
+                    ounces.put("grams", 28.3495);
+                    ounces.put("kilograms", 0.0283495);
+                    ounces.put("milligrams", 28349.5);
                 }
                 break;
-            case "g":
+            case "grams":
                 if(grams.isEmpty()) {
-                    grams.put("lb", 0.00220462);
-                    grams.put("oz", 0.035274);
-                    grams.put("kg", 0.001);
-                    grams.put("mg", 1000.0);
-                    grams.put("g", 1.0);
+                    grams.put("pounds", 0.00220462);
+                    grams.put("ounces", 0.035274);
+                    grams.put("kilograms", 0.001);
+                    grams.put("milligrams", 1000.0);
                 }
                 break;
-            case "kg":
+            case "kilograms":
                 if(kilograms.isEmpty()) {
-                    kilograms.put("lb", 2.20462);
-                    kilograms.put("oz", 35.274);
-                    kilograms.put("g", 1000.0);
-                    kilograms.put("mg", 100000.0);
-                    kilograms.put("kg", 1.0);
+                    kilograms.put("pounds", 2.20462);
+                    kilograms.put("ounces", 35.274);
+                    kilograms.put("grams", 1000.0);
+                    kilograms.put("milligrams", 100000.0);
                 }
                 break;
-            case "mg":
+            case "milligrams":
                 if(milligrams.isEmpty()) {
-                    milligrams.put("lb", 0.00000202246);
-                    milligrams.put("oz", 0.000035274);
-                    milligrams.put("g", 0.001);
-                    milligrams.put("kg", 0.000001);
-                    milligrams.put("mg", 1.0);
+                    milligrams.put("pounds", 0.00000202246);
+                    milligrams.put("ounces", 0.000035274);
+                    milligrams.put("grams", 0.001);
+                    milligrams.put("kilograms", 0.000001);
                 }
                 break;
             default:
