@@ -13,8 +13,6 @@ import com.quinn.scitools.R;
 import pojo.MainPagerAdapter;
 
 public class MainFragment extends Fragment {
-    private int[] tabIcon = {R.drawable.ic_speed, R.drawable.ic_temp, R.drawable.ic_ruler
-            , R.drawable.ic_scale};
 
     public static MainFragment newInstance() {
         MainFragment frag = new MainFragment();
@@ -33,8 +31,8 @@ public class MainFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setIcon(tabIcon[0]));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        tabLayout.addTab(tabLayout.newTab().setText("Convert"));
+        tabLayout.addTab(tabLayout.newTab().setText("Settings"));
 
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.tab_pager);
         final MainPagerAdapter mpa = new MainPagerAdapter(getFragmentManager(),

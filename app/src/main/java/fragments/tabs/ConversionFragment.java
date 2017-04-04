@@ -15,11 +15,10 @@ import android.widget.TextView;
 import com.quinn.scitools.R;
 
 import pojo.ConversionController;
-import pojo.convert.LengthConversion;
 import pojo.helpers.SpinnerHelp;
 
 public class ConversionFragment extends Fragment implements View.OnKeyListener{
-    private TextView mOutcomeTV;
+    private TextView mOutcomeTV, mOutcomeHeaderTV;
     private EditText mInputET;
     private Spinner mSpinnerFrom, mSpinnerTo, mSpinnerType;
 
@@ -42,6 +41,7 @@ public class ConversionFragment extends Fragment implements View.OnKeyListener{
         mInputET.setOnKeyListener(this);
         // TextView
         mOutcomeTV = (TextView) view.findViewById(R.id.conversion_output_tv);
+        mOutcomeHeaderTV = (TextView) view.findViewById(R.id.output_header_str_tv);
         //Spinners
         mSpinnerType = (Spinner) view.findViewById(R.id.top_type_spinner);
         mSpinnerFrom = (Spinner) view.findViewById(R.id.first_spinner);
@@ -63,12 +63,14 @@ public class ConversionFragment extends Fragment implements View.OnKeyListener{
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 setSpinnerData(2, fromAdapter, mSpinnerFrom);
                 setSpinnerData(0, toAdapter, mSpinnerTo);
+                if(mOutcomeTV.getText().length() > 0) {
+                    clearOutput(mOutcomeTV);
+                    clearOutput(mOutcomeHeaderTV);
+                }
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
 
         mSpinnerFrom.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -78,11 +80,41 @@ public class ConversionFragment extends Fragment implements View.OnKeyListener{
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
+
+        mSpinnerTo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(mInputET.getText().length() > 0 && !mInputET.getText().toString().isEmpty()) {
+                    ConversionController cc = new ConversionController();
+                    cc.directConversion(Double.parseDouble(mInputET.getText().toString()),
+                            mSpinnerType.getSelectedItem().toString(),
+                            mSpinnerFrom.getSelectedItem().toString(),
+                            mSpinnerTo.getSelectedItem().toString());
+                    mOutcomeTV.setText(cc.getOutput());
+                    if(mOutcomeTV.getText().toString().length() > 0 ) {
+                        mOutcomeHeaderTV.setText(R.string.conversion_tv);
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 
     private void setSpinnerData(int spinnerCase, ArrayAdapter<String> adapter, Spinner spinner) {
@@ -99,17 +131,28 @@ public class ConversionFragment extends Fragment implements View.OnKeyListener{
         spinner.setSelection(0);
     }
 
+    private void clearOutput(TextView textView) {
+        textView.setText(R.string.empty_str_tv);
+    }
+
     @Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
         if(event.getAction() == KeyEvent.ACTION_DOWN) {
             if(keyCode == KeyEvent.KEYCODE_ENTER) {
-                ConversionController cc = new ConversionController();
-                cc.directConversion(Double.parseDouble(mInputET.getText().toString()),
-                        mSpinnerType.getSelectedItem().toString(),
-                        mSpinnerFrom.getSelectedItem().toString(),
-                        mSpinnerTo.getSelectedItem().toString());
-                mOutcomeTV.setText(cc.getOutput());
-                return true;
+                if(mInputET.getText().length() > 0) {
+                    ConversionController cc = new ConversionController();
+                    cc.directConversion(Double.parseDouble(mInputET.getText().toString()),
+                            mSpinnerType.getSelectedItem().toString(),
+                            mSpinnerFrom.getSelectedItem().toString(),
+                            mSpinnerTo.getSelectedItem().toString());
+                    mOutcomeTV.setText(cc.getOutput());
+                    if(mOutcomeTV.getText().toString().length() > 0 ) {
+                        mOutcomeHeaderTV.setText(R.string.conversion_tv);
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
         return false;

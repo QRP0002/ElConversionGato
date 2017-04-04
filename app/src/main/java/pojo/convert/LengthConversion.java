@@ -1,5 +1,8 @@
 package pojo.convert;
 
+import android.util.Log;
+
+import java.text.DecimalFormat;
 import java.util.HashMap;
 
 public class LengthConversion extends Conversions {
@@ -40,8 +43,8 @@ public class LengthConversion extends Conversions {
             case "miles":
                 if(miles.isEmpty()){
                     miles.put("feet", 5280.0);
-                    miles.put("in", 63360.0);
-                    miles.put("m", 1609.34);
+                    miles.put("inches", 63360.0);
+                    miles.put("meters", 1609.34);
                     miles.put("centimeters", 160934.0);
                     miles.put("kilometers", 1.60934);
                 }
@@ -49,8 +52,8 @@ public class LengthConversion extends Conversions {
             case  "feet":
                 if(feet.isEmpty()) {
                     feet.put("miles", 0.000189394);
-                    feet.put("in", 12.0);
-                    feet.put("m", 0.3048);
+                    feet.put("inches", 12.0);
+                    feet.put("meters", 0.3048);
                     feet.put("centimeters", 30.48);
                     feet.put("kilometers", 0.0003048);
                 }

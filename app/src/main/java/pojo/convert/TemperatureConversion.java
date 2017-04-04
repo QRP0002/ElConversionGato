@@ -1,6 +1,8 @@
 package pojo.convert;
 
 import com.fathzer.soft.javaluator.DoubleEvaluator;
+
+import java.text.DecimalFormat;
 import java.util.HashMap;
 
 public class TemperatureConversion extends Conversions {

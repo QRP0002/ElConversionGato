@@ -9,6 +9,7 @@
     <string name="from_tv"> From: </string>
     <string name="do_tv">What would you like to convert?</string>
     <string name="conversion_tv">Conversion output:</string>
+    <string name="empty_str_tv"> </string>
     <string-array name="type_spinner">
         <item>Length</item>
         <item>Speed</item>
@@ -16,40 +17,6 @@
         <item>Temperature</item>
     </string-array>
 
-    <!--Speed Fragment-->
-    <string-array name="speed_spinner_types">
-        <item>mph</item>
-        <item>km/h</item>
-        <item>knots</item>
-    </string-array>
-
-    <!--Temperature Fragment-->
-    <string-array name="temp_spinner_types">
-        <item>\u2109</item>
-        <item>\u2103</item>
-        <item>\u212A</item>
-    </string-array>
-
-    <!--Length Fragment-->
-    <string-array name="length_spinner_types">
-        <item>feet</item>
-        <item>miles</item>
-        <item>inches</item>
-        <item>meters</item>
-        <item>centimeters</item>
-        <item>kilometers</item>
-    </string-array>
-
-    <!--Length Fragment-->
-    <string-array name="mass_spinner_types">
-        <item>pounds</item>
-        <item>ounces</item>
-        <item>grams</item>
-        <item>kilograms</item>
-        <item>milligrams</item>
-    </string-array>
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

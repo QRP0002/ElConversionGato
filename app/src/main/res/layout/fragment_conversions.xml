@@ -66,9 +66,9 @@
         android:paddingBottom="20dp"/>
 
     <TextView
+        android:id="@+id/output_header_str_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/conversion_tv"
         android:layout_gravity="center"
         android:paddingTop="20dp"
         android:paddingBottom="20dp"/>

@@ -1,5 +1,6 @@
 package pojo.convert;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 
 public class MassConversion extends Conversions {
@@ -37,7 +38,7 @@ public class MassConversion extends Conversions {
             case "pounds":
                 if(pound.isEmpty()){
                     pound.put("ounces", 16.0);
-                    pound.put("g", 453.592);
+                    pound.put("grams", 453.592);
                     pound.put("kilograms", .0453592);
                     pound.put("milligrams", 453592.0);
                 }

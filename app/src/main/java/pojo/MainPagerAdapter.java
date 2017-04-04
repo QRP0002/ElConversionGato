@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import fragments.tabs.ConversionFragment;
+import fragments.tabs.SettingsFragment;
 
 /**
  * Created by quinn on 3/10/17.
@@ -27,6 +28,9 @@ public class MainPagerAdapter extends FragmentStatePagerAdapter {
             case 0:
                 ConversionFragment cf = ConversionFragment.newInstance();
                 return cf;
+            case 1:
+                SettingsFragment sf = SettingsFragment.newInstance();
+                return sf;
             default:
                 return null;
         }
