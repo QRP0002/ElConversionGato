@@ -23,9 +23,8 @@ public abstract class Conversions {
     }
 
      String appendType(String inputStr) {
-         DecimalFormat df = new DecimalFormat("##0.0#####");
-         String formattedStr = df.format(Double.parseDouble(inputStr));
-        StringBuilder sb = new StringBuilder(formattedStr);
+         DecimalFormat df = new DecimalFormat("#,##0.0#####");
+        StringBuilder sb = new StringBuilder(df.format(Double.parseDouble(inputStr)));
          sb.append(" ");
          sb.append(conversionTypeTwo);
         return (sb.toString());

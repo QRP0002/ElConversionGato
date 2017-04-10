@@ -2,6 +2,7 @@ package fragments.tabs;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.quinn.scitools.R;
 
 import pojo.ConversionController;
+import pojo.database.ConversionDBHelper;
 import pojo.helpers.SpinnerHelp;
 
 public class ConversionFragment extends Fragment implements View.OnKeyListener{
@@ -30,12 +32,17 @@ public class ConversionFragment extends Fragment implements View.OnKeyListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ConversionDBHelper db = new ConversionDBHelper(getActivity());
+        SpinnerHelp help = SpinnerHelp.getInstance();
+        help.setTopSpinnerTypes(db.getTypes());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_conversions, container, false);
+        SpinnerHelp help = SpinnerHelp.getInstance();
+
         // EditText
         mInputET = (EditText) view.findViewById(R.id.conversion_input_et);
         mInputET.setOnKeyListener(this);
@@ -46,8 +53,8 @@ public class ConversionFragment extends Fragment implements View.OnKeyListener{
         mSpinnerType = (Spinner) view.findViewById(R.id.top_type_spinner);
         mSpinnerFrom = (Spinner) view.findViewById(R.id.first_spinner);
         mSpinnerTo   = (Spinner) view.findViewById(R.id.second_spinner);
-        ArrayAdapter<CharSequence> typeAdapter = ArrayAdapter.createFromResource(getActivity(),
-                R.array.type_spinner, android.R.layout.simple_spinner_item);
+        ArrayAdapter<String> typeAdapter = new ArrayAdapter<>(getActivity(),
+                android.R.layout.simple_spinner_item, help.getTopSpinnerTypes());
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinnerType.setAdapter(typeAdapter);
 
@@ -87,7 +94,7 @@ public class ConversionFragment extends Fragment implements View.OnKeyListener{
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(mInputET.getText().length() > 0 && !mInputET.getText().toString().isEmpty()) {
-                    ConversionController cc = new ConversionController();
+                    ConversionController cc = new ConversionController(getActivity());
                     cc.directConversion(Double.parseDouble(mInputET.getText().toString()),
                             mSpinnerType.getSelectedItem().toString(),
                             mSpinnerFrom.getSelectedItem().toString(),
@@ -125,7 +132,8 @@ public class ConversionFragment extends Fragment implements View.OnKeyListener{
         } else if(spinnerCase == 1) {
             adapter.addAll(help.updateSpinnerTwo(mSpinnerFrom.getSelectedItem().toString()));
         } else if(spinnerCase == 2){
-            adapter.addAll(help.updateSpinnerOne(mSpinnerType.getSelectedItem().toString()));
+            adapter.addAll(help.updateSpinnerOne(mSpinnerType.getSelectedItem().toString(),
+                    getActivity()));
         }
         adapter.notifyDataSetChanged();
         spinner.setSelection(0);
@@ -140,7 +148,7 @@ public class ConversionFragment extends Fragment implements View.OnKeyListener{
         if(event.getAction() == KeyEvent.ACTION_DOWN) {
             if(keyCode == KeyEvent.KEYCODE_ENTER) {
                 if(mInputET.getText().length() > 0) {
-                    ConversionController cc = new ConversionController();
+                    ConversionController cc = new ConversionController(getActivity());
                     cc.directConversion(Double.parseDouble(mInputET.getText().toString()),
                             mSpinnerType.getSelectedItem().toString(),
                             mSpinnerFrom.getSelectedItem().toString(),
