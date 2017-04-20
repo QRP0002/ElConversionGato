@@ -14,8 +14,8 @@ public class ConversionDBHelper extends SQLiteOpenHelper {
     private static final int VERSION = 1;
     //TYPES TABLE
     private static final String TYPES_TABLE_NAME   = "conversion_types";
-    private static final String TYPES_COLUMN_ID    = "type_id";
-    private static final String TYPES_COLUMN_NAMES = "type_name";
+    private static final String TYPES_COLUMN_ID    = "conversion_type_id";
+    private static final String TYPES_COLUMN_NAMES = "conversion_name";
     //CONVERSION TABLE
     private static final String CONVERSION_TABLE_NAME  = "conversion_information";
     private static final String CONVERSION_COLUMN_ID   = "convert_id";
@@ -57,13 +57,13 @@ public class ConversionDBHelper extends SQLiteOpenHelper {
     /////////////////////////////////////////////////////////////////////////////////
     public void deleteRowsFromTypes() {
     SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("DELETE * from " + TYPES_TABLE_NAME);
+        db.execSQL("DELETE from " + TYPES_TABLE_NAME);
     }
 
     public boolean insertTypes(String type_name) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put("type_name", type_name);
+        cv.put("conversion_name", type_name);
         db.insert(TYPES_TABLE_NAME, null, cv);
         return true;
     }
@@ -109,12 +109,21 @@ public class ConversionDBHelper extends SQLiteOpenHelper {
         cv.put("convert_formula", convert_formula);
         cv.put("convert_value", convert_value);
         db.insert(CONVERSION_TABLE_NAME, null, cv);
+        cv.clear();
+        db.close();
         return true;
     }
 
     public int getConversionRowCount() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("SELECT * FROM " + CONVERSION_TABLE_NAME, null);
+        /*res.moveToFirst();
+
+        for(int i = 0; i < res.getCount(); i++) {
+            Log.d("SPINNER GETTING", res.getString(res.getColumnIndex(CONVERSION_COLUMN_FROM)));
+            Log.d("SPINNER GETTING", res.getString(res.getColumnIndex(CONVERSION_COLUMN_TYPE)));
+            res.moveToNext();
+        }*/
         int count = res.getCount();
         res.close();
         return count;
@@ -122,7 +131,7 @@ public class ConversionDBHelper extends SQLiteOpenHelper {
 
     public void deleteRowsFromConversion() {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("DELETE * from " + CONVERSION_TABLE_NAME);
+        db.execSQL("DELETE from " + CONVERSION_TABLE_NAME);
     }
 
     public double getNoFormulaValue(String fromIn, String toIn) {

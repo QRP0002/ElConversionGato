@@ -2,136 +2,216 @@ package com.quinn.scitools.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.facebook.stetho.Stetho;
 import com.quinn.scitools.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import pojo.database.ConversionDBHelper;
 
 public class SplashScreen extends AppCompatActivity {
     private Context mContext = this;
+    private static final String TAG_SUCCESS = "success";
+    private static final String TAG_DATA = "data";
+    private static final String TAG_COUNT = "count";
+    private static final String TAG_ITEMS = "items";
+    private static final String TAG_TYPE_NAME = "conversion_name";
+    private static final String TAG_CONVERT_TYPE = "convert_type";
+    private static final String TAG_CONVERT_FROM = "convert_from";
+    private static final String TAG_CONVERT_TO  = "convert_to";
+    private static final String TAG_CONVERT_FORMULA = "convert_formula";
+    private static final String TAG_CONVERT_VALUE = "convert_value";
+    private final int[] count = new int[2];
+    private final Object lock = new Object();
+    private ArrayList<HashMap<String, String>> parsedItems    = new ArrayList<>();
+    private ArrayList<HashMap<String, String>> parsedConverts = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-        new SplashBackground().execute();
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    runDBScripts();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        t1.start();
     }
 
-    private class SplashBackground extends AsyncTask<String, Void, Void> {
-        @Override
-        protected Void doInBackground(String... params) {
-            runDBScripts();
-            try{
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+    private void runDBScripts() throws InterruptedException {
+        ConversionDBHelper db = new ConversionDBHelper(mContext);
+        synchronized (lock) {
+            remoteDBAccess("countType");
+            while(count[0] == 0) {
+                lock.wait();
             }
-            return null;
-        }
+            if(db.getTypesRowCount() != count[0]) {
+                if(db.getTypesRowCount() > 0) {
+                    db.deleteRowsFromTypes();
+                }
+                remoteDBAccess("getTypeData");
+                while (parsedItems.size() <= 0) {
+                    lock.wait();
+                }
 
-        @Override
-        protected void onPostExecute(Void results) {
-            super.onPostExecute(results);
+                String tempTypeName = "";
+                for (HashMap<String, String> hashMap : parsedItems) {
+                    for (Map.Entry<String, String> entry : hashMap.entrySet()) {
+                        if(entry.getKey().equals(TAG_TYPE_NAME)) {
+                            tempTypeName = entry.getValue();
+                        }
+                        db.insertTypes(tempTypeName);
+                    }
+                }
+            }
+
+            remoteDBAccess("countConvert");
+            while (count[1] == 0) {
+                lock.wait();
+            }
+            if(db.getConversionRowCount() != count[1]) {
+                remoteDBAccess("getConvertData");
+                if(db.getConversionRowCount() > 0) {
+                    db.deleteRowsFromConversion();
+                }
+                while(parsedConverts.size() <= 0) {
+                    lock.wait();
+                }
+
+                String tempType = "", tempFrom = "", tempTo = "", tempFormula = "", tempValue = "";
+                for (HashMap<String, String> hashMap : parsedConverts) {
+                    for (Map.Entry<String, String> entry : hashMap.entrySet()) {
+                        if(entry.getKey().equals(TAG_CONVERT_TYPE)) {
+                            tempType = entry.getValue();
+                        } else if(entry.getKey().equals(TAG_CONVERT_FROM)) {
+                            tempFrom = entry.getValue();
+                        } else if(entry.getKey().equals(TAG_CONVERT_TO)) {
+                            tempTo = entry.getValue();
+                        } else if(entry.getKey().equals(TAG_CONVERT_FORMULA)) {
+                            tempFormula = entry.getValue();
+                        } else if(entry.getKey().equals(TAG_CONVERT_VALUE)) {
+                            tempValue = entry.getValue();
+                        }
+                    }
+                    if(tempFrom.length() > 0 && tempType.length() > 0 &&
+                            tempTo.length() > 0 && tempFormula .length() > 0 &&
+                            tempValue .length() > 0) {
+                        db.insertConversions(tempType, tempFrom, tempTo, tempFormula, tempValue);
+                    }
+                }
+            }
+            Stetho.initializeWithDefaults(this);
             Intent i = new Intent(SplashScreen.this, MainActivity.class);
             startActivity(i);
             finish();
         }
 
-        private void runDBScripts() {
-            ConversionDBHelper db = new ConversionDBHelper(mContext);
-            //TYPES TABLE
-            if(db.getTypesRowCount() != 4) {
-                if(db.getTypesRowCount() > 0) {
-                    db.deleteRowsFromTypes();
-                }
-                String[] types = {"Length", "Mass", "Speed", "Temperature"};
-                for (String temp : types) {
-                    db.insertTypes(temp);
-                }
-            }
 
-            //CONVERSION TABLE
-            if(db.getConversionRowCount() != 62) {
-                if(db.getConversionRowCount() > 0) {
-                    db.deleteRowsFromConversion();
-                }
-                db.insertConversions("Length", "feet", "miles", "no", "0.000189394");
-                db.insertConversions("Length", "feet", "inches", "no", "12.0");
-                db.insertConversions("length", "feet", "meters", "no", "0.3048");
-                db.insertConversions("length", "feet", "centimeters", "no", "30.48");
-                db.insertConversions("length", "feet", "kilometers", "no", "0.0003048");
-                db.insertConversions("length", "miles", "feet", "no", "5290.0");
-                db.insertConversions("length", "miles", "inches", "no", "63360.0");
-                db.insertConversions("length", "miles", "meters", "no", "1609.34");
-                db.insertConversions("length", "miles", "centimeters", "no", "160934.0");
-                db.insertConversions("length", "miles", "kilometers", "no", "1.60934");
-                db.insertConversions("length", "meters", "feet", "no", "3.28084");
-                db.insertConversions("length", "meters", "miles", "no", "0.000621371");
-                db.insertConversions("length", "meters", "inches", "no", "39.3701");
-                db.insertConversions("length", "meters", "centimeters", "no", "100.0");
-                db.insertConversions("length", "meters", "kilometers", "no", "0.001");
-                db.insertConversions("length", "inches", "feet", "no", "0.0833333");
-                db.insertConversions("length", "inches", "miles", "no", "0.00001578");
-                db.insertConversions("length", "inches", "meters", "no", "0.0254");
-                db.insertConversions("length", "inches", "centimeters", "no", "2.54");
-                db.insertConversions("length", "inches", "kilometers", "no", "0.0000254");
-                db.insertConversions("length", "centimeters", "feet", "no", "0.032808");
-                db.insertConversions("length", "centimeters", "miles", "no", "0.0000062137");
-                db.insertConversions("length", "centimeters", "inches", "no", "0.393701");
-                db.insertConversions("length", "centimeters", "meters", "no", "0.01");
-                db.insertConversions("length", "centimeters", "kilometers", "no", "0.00001");
-                db.insertConversions("length", "kilometers", "feet", "no", "3280.84");
-                db.insertConversions("length", "kilometers", "miles", "no", "0.621371");
-                db.insertConversions("length", "kilometers", "inches", "no", "39370.1");
-                db.insertConversions("length", "kilometers", "meters", "no", "100000.0)");
-                db.insertConversions("length", "kilometers", "centimeters", "no", "1000.0");
-                db.insertConversions("mass", "pounds", "ounces", "no", "16.0");
-                db.insertConversions("mass", "pounds", "grams", "no", "453.592");
-                db.insertConversions("mass", "pounds", "milligrams", "no", "453592.0");
-                db.insertConversions("mass", "pounds", "kilograms", "no", "0.454");
-                db.insertConversions("mass", "ounces", "pounds", "no", "0.06252");
-                db.insertConversions("mass", "ounces", "grams", "no", "28.3495");
-                db.insertConversions("mass", "ounces", "milligrams", "no", "28349.5");
-                db.insertConversions("mass", "ounces", "kilograms", "no", "0.0283495");
-                db.insertConversions("mass", "grams", "pounds", "no", "0.00220462");
-                db.insertConversions("mass", "grams", "ounces", "no", "0.035274");
-                db.insertConversions("mass", "grams", "milligrams", "no", "1000.0");
-                db.insertConversions("mass", "grams", "kilograms", "no", "0.001");
-                db.insertConversions("mass", "milligrams", "pounds", "no", "0.00000202246");
-                db.insertConversions("mass", "milligrams", "ounces", "no", "0.000035274");
-                db.insertConversions("mass", "milligrams", "grams", "no", "0.001");
-                db.insertConversions("mass", "milligrams", "kilograms", "no", "0.000001");
-                db.insertConversions("mass", "kilograms", "pounds", "no", "2.20462");
-                db.insertConversions("mass", "kilograms", "ounces", "no", "35.274");
-                db.insertConversions("mass", "kilograms", "grams", "no", "1000.0");
-                db.insertConversions("mass", "kilograms", "milligrams", "no", "100000.0");
-                db.insertConversions("speed", "mph", "km/h", "no", "1.60934");
-                db.insertConversions("speed", "mph", "knots", "no", "0.868976");
-                db.insertConversions("speed", "knots", "mph", "no", "1.15078");
-                db.insertConversions("speed", "knots", "km/h", "no", "1.852");
-                db.insertConversions("speed", "km/h", "mph", "no", "0.621371");
-                db.insertConversions("speed", "km/h", "knots", "no", "0.539957");
-                db.insertConversions("temperature", "\u2109", "\u2103", "yes",
-                        "(((x - 32.0) * 5) / 9)");
-                db.insertConversions("temperature", "\u2109", "\u212A", "yes",
-                        "((((x - 32.0) * 5) / 9) + 273.15)");
-                db.insertConversions("temperature", "\u2103", "\u2109", "yes",
-                        "(((x * 9) / 5) + 32.0)");
-                db.insertConversions("temperature", "\u2103", "\u212A", "yes",
-                        "(x + 273.15)");
-                db.insertConversions("temperature", "\u212A", "\u2109", "yes",
-                        "(((x * 9) / 5) - 459.67)");
-                db.insertConversions("temperature", "\u212A", "\u2103", "yes",
-                        "(x - 273.15)");
+    }
+
+    private void parseJSONArray (JSONObject json, String action) throws JSONException {
+        JSONArray jsonItemArray = json.getJSONArray(TAG_ITEMS);
+        for(int i = 0; i < jsonItemArray.length(); i++) {
+            JSONObject tempObj = jsonItemArray.getJSONObject(i);
+            if(action.equals("getTypeData")) {
+                String tempName = tempObj.getString(TAG_TYPE_NAME);
+                HashMap<String, String> map = new HashMap<>();
+                map.put(TAG_TYPE_NAME, tempName);
+                parsedItems.add(map);
+            } else {
+                String tempType = tempObj.getString(TAG_CONVERT_TYPE);
+                String tempFrom = tempObj.getString(TAG_CONVERT_FROM);
+                String tempTo = tempObj.getString(TAG_CONVERT_TO);
+                String tempFormula = tempObj.getString(TAG_CONVERT_FORMULA);
+                String tempValue = tempObj.getString(TAG_CONVERT_VALUE);
+                HashMap<String, String> map = new HashMap<>();
+                map.put(TAG_CONVERT_TYPE, tempType);
+                map.put(TAG_CONVERT_FROM, tempFrom);
+                map.put(TAG_CONVERT_TO, tempTo);
+                map.put(TAG_CONVERT_FORMULA, tempFormula);
+                map.put(TAG_CONVERT_VALUE, tempValue);
+                parsedConverts.add(map);
             }
         }
+
+    }
+
+    private void remoteDBAccess(final String action) {
+        final RequestQueue queue = Volley.newRequestQueue(mContext);
+        final String url = "http://ec2-52-90-8-139.compute-1.amazonaws.com/API.php";
+        Thread t2 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (lock) {
+                    StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+                            new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+                                    try {
+                                        JSONObject jObject = new JSONObject(response);
+                                        JSONObject dataObject = jObject.getJSONObject(TAG_DATA);
+                                        int success = dataObject.getInt(TAG_SUCCESS);
+                                        synchronized (lock) {
+                                            if (success == 1) {
+                                                if(action.equals("countType")) {
+                                                    count[0] = dataObject.getInt(TAG_COUNT);
+                                                } else if(action.equals("countConvert")) {
+                                                    count[1] = dataObject.getInt(TAG_COUNT);
+                                                } else if(action.equals("getTypeData")) {
+                                                    parseJSONArray(dataObject, action);
+                                                } else if(action.equals("getConvertData")) {
+                                                    parseJSONArray(dataObject, action);
+                                                }
+                                                lock.notify();
+                                            }
+                                        }
+
+                                    } catch (JSONException ex) {
+                                        ex.printStackTrace();
+                                    }
+
+                                }
+                            },
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    // error
+                                    Log.d("Error.Response", error.toString());
+                                }
+                            }
+                    ) {
+                        @Override
+                        protected Map<String, String> getParams() {
+                            Map<String, String>  params = new HashMap<String, String>();
+                            params.put("action", action);
+
+                            return params;
+                        }
+                    };
+                    queue.add(postRequest);
+                }
+            }
+        });
+        t2.start();
     }
 }
