@@ -11,7 +11,7 @@
     getTableData($connection, $_POST['action']);
   } else {
     ?>
-      <form action="Test.php" method="post">
+      <form action="API.php" method="post">
           Username: <br>
           <input type="text" name="action"/>
           <br><br>

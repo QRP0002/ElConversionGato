@@ -1,6 +1,7 @@
 package pojo.helpers;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -37,6 +38,7 @@ public class SpinnerHelp {
                 returnArray.add(tempStr);
             }
         }
+        Log.d("STRING ARRAY", returnArray.toString());
         return(returnArray);
     }
 

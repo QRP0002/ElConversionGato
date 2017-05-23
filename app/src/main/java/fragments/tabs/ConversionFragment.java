@@ -70,6 +70,9 @@ public class ConversionFragment extends Fragment implements View.OnKeyListener{
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 setSpinnerData(2, fromAdapter, mSpinnerFrom);
                 setSpinnerData(0, toAdapter, mSpinnerTo);
+                if(mInputET.getText().length() > 0) {
+                    mInputET.setText("");
+                }
                 if(mOutcomeTV.getText().length() > 0) {
                     clearOutput(mOutcomeTV);
                     clearOutput(mOutcomeHeaderTV);
