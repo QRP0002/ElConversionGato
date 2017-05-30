@@ -117,13 +117,6 @@ public class ConversionDBHelper extends SQLiteOpenHelper {
     public int getConversionRowCount() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("SELECT * FROM " + CONVERSION_TABLE_NAME, null);
-        /*res.moveToFirst();
-
-        for(int i = 0; i < res.getCount(); i++) {
-            Log.d("SPINNER GETTING", res.getString(res.getColumnIndex(CONVERSION_COLUMN_FROM)));
-            Log.d("SPINNER GETTING", res.getString(res.getColumnIndex(CONVERSION_COLUMN_TYPE)));
-            res.moveToNext();
-        }*/
         int count = res.getCount();
         res.close();
         return count;

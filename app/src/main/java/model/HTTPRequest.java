@@ -1,16 +1,8 @@
 package model;
 
 import android.os.AsyncTask;
-import android.util.Log;
-
-import com.quinn.scitools.activity.SplashScreen;
-
 import org.json.JSONException;
-
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
