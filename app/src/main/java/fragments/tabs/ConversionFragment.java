@@ -2,7 +2,6 @@ package fragments.tabs;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,14 +14,20 @@ import android.widget.TextView;
 
 import com.quinn.scitools.R;
 
-import pojo.ConversionController;
-import pojo.database.ConversionDBHelper;
-import pojo.helpers.SpinnerHelp;
+import java.util.ArrayList;
 
-public class ConversionFragment extends Fragment implements View.OnKeyListener{
+import presenter.ConversionFragmentPresenter;
+
+public class ConversionFragment extends Fragment implements View.OnKeyListener,
+        ConversionFragmentPresenter.ConversionFragmentView {
+
     private TextView mOutcomeTV, mOutcomeHeaderTV;
     private EditText mInputET;
     private Spinner mSpinnerFrom, mSpinnerTo, mSpinnerType;
+    private ArrayAdapter<String> typeAdapter, fromAdapter, toAdapter;
+
+    private ConversionFragmentPresenter presenter;
+
 
     public static ConversionFragment newInstance() {
         ConversionFragment fragment = new ConversionFragment();
@@ -32,16 +37,15 @@ public class ConversionFragment extends Fragment implements View.OnKeyListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ConversionDBHelper db = new ConversionDBHelper(getActivity());
-        SpinnerHelp help = SpinnerHelp.getInstance();
-        help.setTopSpinnerTypes(db.getTypes());
+        presenter = new ConversionFragmentPresenter(getActivity(), this);
+        presenter.loadTypes();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_conversions, container, false);
-        SpinnerHelp help = SpinnerHelp.getInstance();
+        presenter = new ConversionFragmentPresenter(getActivity(), this);
 
         // EditText
         mInputET = (EditText) view.findViewById(R.id.conversion_input_et);
@@ -53,26 +57,23 @@ public class ConversionFragment extends Fragment implements View.OnKeyListener{
         mSpinnerType = (Spinner) view.findViewById(R.id.top_type_spinner);
         mSpinnerFrom = (Spinner) view.findViewById(R.id.first_spinner);
         mSpinnerTo   = (Spinner) view.findViewById(R.id.second_spinner);
-        ArrayAdapter<String> typeAdapter = new ArrayAdapter<>(getActivity(),
-                android.R.layout.simple_spinner_item, help.getTopSpinnerTypes());
-        typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpinnerType.setAdapter(typeAdapter);
 
-        final ArrayAdapter<String> fromAdapter = new ArrayAdapter<>(getActivity(),
-                android.R.layout.simple_spinner_item);
-        mSpinnerFrom.setAdapter(fromAdapter);
-        final ArrayAdapter<String> toAdapter = new ArrayAdapter<>(getActivity(),
-                android.R.layout.simple_spinner_item);
-        mSpinnerTo.setAdapter(toAdapter);
+        presenter.assigningTypeSpinnerArray();
 
+        //Type Spinner
         mSpinnerType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                setSpinnerData(2, fromAdapter, mSpinnerFrom);
-                setSpinnerData(0, toAdapter, mSpinnerTo);
+                presenter.assigningFromSpinnerArray(mSpinnerType.getSelectedItem().toString());
+                presenter.assigningToSpinnerArray(mSpinnerFrom.getSelectedItem().toString(), true);
+
+                //Clear the EditText section if the types spinner changes.
+                if(mInputET.getText().length() > 0) {
+                    mInputET.setText("");
+                }
+                //Clear the TextViews if the types spinner changes.
                 if(mOutcomeTV.getText().length() > 0) {
-                    clearOutput(mOutcomeTV);
-                    clearOutput(mOutcomeHeaderTV);
+                    clearOutputTextView(mOutcomeTV, mOutcomeHeaderTV);
                 }
             }
 
@@ -83,7 +84,10 @@ public class ConversionFragment extends Fragment implements View.OnKeyListener{
         mSpinnerFrom.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                setSpinnerData(1, toAdapter, mSpinnerTo);
+                presenter.assigningToSpinnerArray(mSpinnerFrom.getSelectedItem().toString(), false);
+                if(mInputET.getText().length() > 0 && !mInputET.getText().toString().isEmpty()) {
+                    notifyCalculatePresenter();
+                }
             }
 
             @Override
@@ -94,53 +98,14 @@ public class ConversionFragment extends Fragment implements View.OnKeyListener{
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(mInputET.getText().length() > 0 && !mInputET.getText().toString().isEmpty()) {
-                    ConversionController cc = new ConversionController(getActivity());
-                    cc.directConversion(Double.parseDouble(mInputET.getText().toString()),
-                            mSpinnerType.getSelectedItem().toString(),
-                            mSpinnerFrom.getSelectedItem().toString(),
-                            mSpinnerTo.getSelectedItem().toString());
-                    mOutcomeTV.setText(cc.getOutput());
-                    if(mOutcomeTV.getText().toString().length() > 0 ) {
-                        mOutcomeHeaderTV.setText(R.string.conversion_tv);
-                    }
+                    notifyCalculatePresenter();
                 }
             }
-
+            
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
-
         return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    private void setSpinnerData(int spinnerCase, ArrayAdapter<String> adapter, Spinner spinner) {
-        SpinnerHelp help = SpinnerHelp.getInstance();
-        adapter.clear();
-        if(spinnerCase == 0) {
-            adapter.addAll(help.initialSpinnerTwo());
-        } else if(spinnerCase == 1) {
-            adapter.addAll(help.updateSpinnerTwo(mSpinnerFrom.getSelectedItem().toString()));
-        } else if(spinnerCase == 2){
-            adapter.addAll(help.updateSpinnerOne(mSpinnerType.getSelectedItem().toString(),
-                    getActivity()));
-        }
-        adapter.notifyDataSetChanged();
-        spinner.setSelection(0);
-    }
-
-    private void clearOutput(TextView textView) {
-        textView.setText(R.string.empty_str_tv);
     }
 
     @Override
@@ -148,15 +113,7 @@ public class ConversionFragment extends Fragment implements View.OnKeyListener{
         if(event.getAction() == KeyEvent.ACTION_DOWN) {
             if(keyCode == KeyEvent.KEYCODE_ENTER) {
                 if(mInputET.getText().length() > 0) {
-                    ConversionController cc = new ConversionController(getActivity());
-                    cc.directConversion(Double.parseDouble(mInputET.getText().toString()),
-                            mSpinnerType.getSelectedItem().toString(),
-                            mSpinnerFrom.getSelectedItem().toString(),
-                            mSpinnerTo.getSelectedItem().toString());
-                    mOutcomeTV.setText(cc.getOutput());
-                    if(mOutcomeTV.getText().toString().length() > 0 ) {
-                        mOutcomeHeaderTV.setText(R.string.conversion_tv);
-                    }
+                    notifyCalculatePresenter();
                     return true;
                 } else {
                     return false;
@@ -164,5 +121,61 @@ public class ConversionFragment extends Fragment implements View.OnKeyListener{
             }
         }
         return false;
+    }
+
+    private void clearOutputTextView(TextView textViewOne, TextView textViewTwo) {
+        textViewOne.setText("");
+        textViewTwo.setText("");
+    }
+
+    private void notifyCalculatePresenter() {
+        presenter.calculateOutcome(Double.parseDouble(mInputET.getText().toString()),
+                mSpinnerType.getSelectedItem().toString(),
+                mSpinnerFrom.getSelectedItem().toString(),
+                mSpinnerTo.getSelectedItem().toString());
+        if(mOutcomeTV.getText().toString().length() > 0 ) {
+            mOutcomeHeaderTV.setText(R.string.conversion_tv);
+        }
+    }
+
+    //
+    // Presenter Interface methods are below.
+    //
+
+    @Override
+    public void fillTypeSpinner(ArrayList<String> types) {
+        if(typeAdapter == null) {
+            typeAdapter = new ArrayAdapter<>(getActivity(),
+                    android.R.layout.simple_spinner_item, types);
+            typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            mSpinnerType.setAdapter(typeAdapter);
+        }
+    }
+
+    @Override
+    public void fillFromSpinner(ArrayList<String> types) {
+        if(fromAdapter == null) {
+            fromAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item);
+            mSpinnerFrom.setAdapter(fromAdapter);
+        }
+        fromAdapter.clear();
+        fromAdapter.addAll(types);
+        mSpinnerFrom.setSelection(0);
+    }
+
+    @Override
+    public void fillToSpinner(ArrayList<String> types) {
+        if(toAdapter == null) {
+            toAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item);
+            mSpinnerTo.setAdapter(toAdapter);
+        }
+        toAdapter.clear();
+        toAdapter.addAll(types);
+        mSpinnerTo.setSelection(0);
+    }
+
+    @Override
+    public void fillOutcomeTextView(String text) {
+        mOutcomeTV.setText(text);
     }
 }
