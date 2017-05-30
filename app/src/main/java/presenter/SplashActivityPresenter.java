@@ -1,16 +1,12 @@
 package presenter;
-import android.util.Log;
 
 import com.quinn.scitools.activity.SplashScreen;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
 import model.HTTPRequest;
 import pojo.database.ConversionDBHelper;
 
@@ -36,9 +32,7 @@ public class SplashActivityPresenter {
     private String convertData;
 
     //Splash Activity View Interface
-    public interface SplashActivityView {
-        void startMainActivity();
-    }
+    public interface SplashActivityView { void startMainActivity(); }
 
     //View used for the SQLite Database.
     private SplashScreen view;
