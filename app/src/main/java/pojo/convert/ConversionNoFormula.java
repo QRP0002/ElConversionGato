@@ -1,14 +1,10 @@
 package pojo.convert;
 
-import android.content.Context;
-
-import pojo.database.ConversionDBHelper;
-
 public class ConversionNoFormula extends Conversions {
-    private Context context;
+    private double dataBaseValue;
 
-    public ConversionNoFormula(Context context) {
-        this.context = context;
+    public ConversionNoFormula(double dataBaseValue) {
+        this.dataBaseValue = dataBaseValue;
     }
 
     @Override
@@ -17,9 +13,6 @@ public class ConversionNoFormula extends Conversions {
     }
 
     private double calculate(double valueIn) {
-        ConversionDBHelper db = new ConversionDBHelper(this.context);
-        double convertValue = db.getNoFormulaValue(super.getConversionType(),
-                super.getConversionTypeTwo());
-        return valueIn * convertValue;
+        return valueIn * dataBaseValue;
     }
 }

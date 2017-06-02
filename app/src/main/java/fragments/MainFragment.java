@@ -32,7 +32,7 @@ public class MainFragment extends Fragment {
 
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("Convert"));
-        tabLayout.addTab(tabLayout.newTab().setText("Settings"));
+        tabLayout.addTab(tabLayout.newTab().setText("Contact Us"));
 
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.tab_pager);
         final MainPagerAdapter mpa = new MainPagerAdapter(getFragmentManager(),
