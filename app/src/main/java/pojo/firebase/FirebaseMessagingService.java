@@ -9,9 +9,6 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.quinn.scitools.R;
 import com.quinn.scitools.activity.MainActivity;
 
-/**
- * Created by quinn on 5/30/17.
- */
 
 public class FirebaseMessagingService extends
         com.google.firebase.messaging.FirebaseMessagingService {
@@ -22,7 +19,6 @@ public class FirebaseMessagingService extends
     }
 
     private void showNotification(String message) {
-
         Intent i = new Intent(this, MainActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
@@ -32,11 +28,10 @@ public class FirebaseMessagingService extends
                 .setAutoCancel(true)
                 .setContentTitle("Testing")
                 .setContentText(message)
-                .setSmallIcon(R.drawable.ic_ruler)
+                .setSmallIcon(R.drawable.ruler)
                 .setContentIntent(pendingIntent);
 
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
         manager.notify(0,builder.build());
     }
 }

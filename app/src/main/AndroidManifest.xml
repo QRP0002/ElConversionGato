@@ -6,7 +6,7 @@
         android:name="com.pommerening.quinn.foodtruck.minimapfragment.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -15,8 +15,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activity.SplashScreen"
-            android:label="@string/title_activity_splash_screen"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

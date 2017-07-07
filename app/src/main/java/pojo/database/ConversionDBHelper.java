@@ -9,7 +9,10 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import static android.content.ContentValues.TAG;
+
 public class ConversionDBHelper extends SQLiteOpenHelper {
+
     private static final String DB_NAME = "scitools.sqlite";
     private static final int VERSION = 1;
     //TYPES TABLE
@@ -76,20 +79,23 @@ public class ConversionDBHelper extends SQLiteOpenHelper {
         return count;
     }
 
-    public ArrayList<String> getTypes() {
+    public ArrayList<String> getTypes() throws NullPointerException {
         ArrayList<String> typesArray = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("SELECT * FROM " + TYPES_TABLE_NAME,
-                null);
-        res.moveToFirst();
+        try {
+            Cursor res = db.rawQuery("SELECT * FROM " + TYPES_TABLE_NAME,
+                    null);
+            res.moveToFirst();
 
-        for(int i = 0; i < res.getCount(); i++) {
-            typesArray.add(res.getString(res.getColumnIndex(TYPES_COLUMN_NAMES)));
-            res.moveToNext();
+            for(int i = 0; i < res.getCount(); i++) {
+                typesArray.add(res.getString(res.getColumnIndex(TYPES_COLUMN_NAMES)));
+                res.moveToNext();
+            }
+            res.close();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
-
-        res.close();
-        return (typesArray);
+        return (typesArray.size() > 0 ? typesArray : null);
     }
 
 
@@ -164,7 +170,7 @@ public class ConversionDBHelper extends SQLiteOpenHelper {
         }
 
         res.close();
-        return tempArray;
+        return (tempArray.size() > 0 ? tempArray : null);
     }
 
     public String isFormula(String fromIn, String toIn) {
