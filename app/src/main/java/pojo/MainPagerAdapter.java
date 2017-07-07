@@ -6,11 +6,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import fragments.tabs.ConversionFragment;
-import fragments.tabs.SettingsFragment;
+import fragments.tabs.ContactFragment;
 
-/**
- * Created by quinn on 3/10/17.
- */
 
 public class MainPagerAdapter extends FragmentStatePagerAdapter {
     private Context context;
@@ -29,7 +26,7 @@ public class MainPagerAdapter extends FragmentStatePagerAdapter {
                 ConversionFragment cf = ConversionFragment.newInstance();
                 return cf;
             case 1:
-                SettingsFragment sf = SettingsFragment.newInstance();
+                ContactFragment sf = ContactFragment.newInstance();
                 return sf;
             default:
                 return null;

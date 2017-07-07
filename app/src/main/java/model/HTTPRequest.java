@@ -12,6 +12,12 @@ import presenter.SplashActivityPresenter;
 
 public class HTTPRequest {
 
+    private final SplashActivityPresenter presenter;
+
+    public HTTPRequest(SplashActivityPresenter presenter) {
+        this.presenter = presenter;
+    }
+
     public void callDatabase() {
         new CallingAPI().execute("countType");
         new CallingAPI().execute("countConvert");
@@ -43,7 +49,6 @@ public class HTTPRequest {
 
         @Override
         protected void onPostExecute(String[] result) {
-            SplashActivityPresenter presenter = SplashActivityPresenter.getInstance();
             super.onPostExecute(result);
             switch (result[0]) {
                 case "countType":

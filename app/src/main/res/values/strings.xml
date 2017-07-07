@@ -1,12 +1,13 @@
 <resources>
-    <string name="app_name">SciTools</string>
+    <string name="app_name">El Conversion Gato</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_single_fragment">SingleFragmentActivity</string>
     <string name="title_activity_main">MainActivity</string>
 
     <!-- Universal -->
-    <string name="to_tv"> To: </string>
-    <string name="from_tv"> From: </string>
+    <string name="to_tv"> Converting To: </string>
+    <string name="from_tv"> Converting From: </string>
+    <string name="type_tv"> Type: </string>
     <string name="do_tv">What would you like to convert?</string>
     <string name="conversion_tv">Conversion output:</string>
     <string name="empty_str_tv"> </string>
@@ -17,7 +18,10 @@
         <item>Temperature</item>
     </string-array>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="thank_you">Thank you for downloading and using this application! \n\nIf you have any comments, critics, concerns,
+        or want someone to talk to, click the button below.</string>
     <string name="title_activity_splash_screen">SplashScreen</string>
-
+    <string name="enter_value_hint">Enter Value</string>
+    <string name="contact">If you have any comments, critics, concerns,
+        or want someone to talk to, click the button below.</string>
 </resources>

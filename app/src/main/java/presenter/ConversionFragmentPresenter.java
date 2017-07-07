@@ -1,20 +1,20 @@
 package presenter;
 
 import android.content.Context;
-import android.util.Log;
-
 import java.util.ArrayList;
 
 import fragments.tabs.ConversionFragment;
-import pojo.ConversionController;
+import pojo.convert.ConversionFormula;
+import pojo.convert.ConversionNoFormula;
+import pojo.convert.Conversions;
 import pojo.database.ConversionDBHelper;
-import pojo.helpers.SpinnerHelp;
 
 public class ConversionFragmentPresenter {
 
     private Context context;
     private ConversionFragment view;
-    private SpinnerHelp help = SpinnerHelp.getInstance();
+    private ConversionDBHelper db;
+    private ArrayList<String> typeSpinnerArray, fromSpinnerArray;
 
     public interface ConversionFragmentView {
         void fillTypeSpinner(ArrayList<String> types);
@@ -32,30 +32,74 @@ public class ConversionFragmentPresenter {
         this.view = view;
     }
 
-    public void loadTypes() {
-        ConversionDBHelper db = new ConversionDBHelper(context);
-        help.setTypesSpinner(db.getTypes());
-    }
+    /**
+     *  Spinner Methods.
+     */
 
     public void assigningTypeSpinnerArray() {
-        view.fillTypeSpinner(help.getTypesSpinner());
+        db = new ConversionDBHelper(context);
+        view.fillTypeSpinner(db.getTypes());
     }
 
     public void assigningFromSpinnerArray(String conversionTypeSelected) {
-        view.fillFromSpinner(help.updateFromSpinner(conversionTypeSelected, context));
+        fromSpinnerArray = db.getFromSpinnerData(conversionTypeSelected.toLowerCase());
+        view.fillFromSpinner(fromSpinnerArray);
     }
 
     public void assigningToSpinnerArray(String conversionFromSelected, boolean firstTime) {
         if(firstTime) {
-            view.fillToSpinner(help.initialToSpinner());
+            view.fillToSpinner(parseToSpinnerData(fromSpinnerArray.get(0)));
         } else {
-            view.fillToSpinner(help.updateToSpinner(conversionFromSelected));
+            view.fillToSpinner(parseToSpinnerData(conversionFromSelected));
         }
     }
 
-    public void calculateOutcome(double inputValue, String conversionType, String from, String to) {
-        ConversionController cc = new ConversionController(context);
-        cc.directConversion(inputValue, conversionType, from, to);
-        view.fillOutcomeTextView(cc.getOutput());
+    private ArrayList<String> parseToSpinnerData(String removeData) {
+        ArrayList<String> returnArray = new ArrayList<>();
+
+        if(!returnArray.isEmpty() && returnArray.size() > 0) {
+            returnArray.clear();
+        }
+
+        for(String tempStr : fromSpinnerArray) {
+            if(!tempStr.equals(removeData)) {
+                returnArray.add(tempStr);
+            }
+        }
+        return(returnArray);
+    }
+
+    /**
+     *  Calculation Methods.
+     */
+
+    public void calculateOutcome(double inputValue, String from, String to) {
+        db = new ConversionDBHelper(this.context);
+
+        if(checkFormula(from, to, db).equals("yes")) {
+            ConversionFormula cf = new ConversionFormula(getValuesFromDatabase(from, to, db, true));
+            setConversionTypes(cf, from, to);
+            view.fillOutcomeTextView(cf.convert(inputValue));
+        } else {
+            ConversionNoFormula cnf = new ConversionNoFormula(Double.parseDouble(
+                    getValuesFromDatabase(from, to, db, false)));
+            setConversionTypes(cnf, from, to);
+            view.fillOutcomeTextView(cnf.convert(inputValue));
+        }
+    }
+
+    private String checkFormula(String from, String to, ConversionDBHelper db) {
+        return (db.isFormula(from, to));
+    }
+
+    private String getValuesFromDatabase(String from, String to, ConversionDBHelper db,
+                                         boolean formula) {
+        return (formula ? db.getFormulaValue(from, to) :
+                Double.toString(db.getNoFormulaValue(from, to)));
+    }
+
+    private void setConversionTypes(Conversions obj, String fromType, String toType) {
+        obj.setConversionType(fromType);
+        obj.setConversionTypeTwo(toType);
     }
 }
