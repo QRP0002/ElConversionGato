@@ -1,15 +1,12 @@
 package pojo.convert;
 
-import android.content.Context;
 import com.fathzer.soft.javaluator.DoubleEvaluator;
 
-import pojo.database.ConversionDBHelper;
-
 public class ConversionFormula extends Conversions {
-    private Context context;
+    private String formula;
 
-    public ConversionFormula(Context context) {
-        this.context = context;
+    public ConversionFormula(String formula) {
+        this.formula = formula;
     }
 
     @Override
@@ -23,13 +20,9 @@ public class ConversionFormula extends Conversions {
     }
 
     private String parse(double valueIn) {
-        ConversionDBHelper db = new ConversionDBHelper(this.context);
-        String formula = db.getFormulaValue(super.getConversionType(),
-                super.getConversionTypeTwo());
-
-        StringBuffer sb = new StringBuffer(formula);
+        StringBuffer sb = new StringBuffer(this.formula);
         for (int i = 0; i < formula.length(); i++) {
-            if(formula.charAt(i) == 'x') {
+            if(this.formula.charAt(i) == 'x') {
                 sb.deleteCharAt(i);
                 sb.insert(i, valueIn);
                 break;

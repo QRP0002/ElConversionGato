@@ -1,5 +1,7 @@
 package presenter;
 
+import android.util.Log;
+
 import com.quinn.scitools.activity.SplashScreen;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,25 +34,31 @@ public class SplashActivityPresenter {
     private String convertData;
 
     //Splash Activity View Interface
-    public interface SplashActivityView { void startMainActivity(); }
+    public interface SplashActivityView {
+        void startMainActivity();
+
+        void startConnectionDialog();
+    }
 
     //View used for the SQLite Database.
     private SplashScreen view;
 
-    private static SplashActivityPresenter instance = null;
-
-    private SplashActivityPresenter() {}
-
-    public static SplashActivityPresenter getInstance() {
-        if(instance == null) {
-            instance = new SplashActivityPresenter();
-        }
-        return instance;
+    public SplashActivityPresenter(SplashScreen view) {
+        this.view = view;
     }
 
-    public void startBackgroundTasks() {
-        HTTPRequest model = new HTTPRequest();
-        model.callDatabase();
+    public void networkFlow(boolean networkResult) {
+        ConversionDBHelper db = new ConversionDBHelper(view);
+
+        if(networkResult) {
+            HTTPRequest model = new HTTPRequest(this);
+            model.callDatabase();
+        } else if(!networkResult && db.getTypesRowCount() > 0 && db.getConversionRowCount() > 0) {
+
+            view.startMainActivity();
+        } else {
+            view.startConnectionDialog();
+        }
     }
 
     public void settingUpDatabaseData() throws JSONException {
@@ -166,9 +174,5 @@ public class SplashActivityPresenter {
 
     public void setCountType(String countType) {
         this.countType = countType;
-    }
-
-    public void setView(SplashScreen view) {
-        this.view = view;
     }
 }
