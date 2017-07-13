@@ -1,6 +1,8 @@
 package presenter;
 
 import android.content.Context;
+
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import fragments.tabs.ConversionFragment;
@@ -42,7 +44,7 @@ public class ConversionFragmentPresenter {
     }
 
     public void assigningFromSpinnerArray(String conversionTypeSelected) {
-        fromSpinnerArray = db.getFromSpinnerData(conversionTypeSelected.toLowerCase());
+        fromSpinnerArray = db.getFromSpinnerData(conversionTypeSelected);
         view.fillFromSpinner(fromSpinnerArray);
     }
 

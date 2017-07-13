@@ -1,5 +1,8 @@
 package pojo.convert;
 
+import android.icu.math.BigDecimal;
+import android.util.Log;
+
 public class ConversionNoFormula extends Conversions {
     private double dataBaseValue;
 
@@ -9,10 +12,13 @@ public class ConversionNoFormula extends Conversions {
 
     @Override
     public String convert(double valueIn) {
-        return(super.appendType(Double.toString(calculate(valueIn))));
+        return(super.appendType((calculate(valueIn)).toString()));
     }
 
-    private double calculate(double valueIn) {
-        return valueIn * dataBaseValue;
+    private BigDecimal calculate(double valueIn) {
+        BigDecimal userValue = BigDecimal.valueOf(valueIn);
+        BigDecimal dbValue = BigDecimal.valueOf(dataBaseValue);
+        Log.d("NoFormula", userValue.multiply(dbValue).toString());
+        return userValue.multiply(dbValue);
     }
 }
