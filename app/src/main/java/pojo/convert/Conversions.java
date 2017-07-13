@@ -1,5 +1,6 @@
 package pojo.convert;
 
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 public abstract class Conversions {
@@ -23,8 +24,9 @@ public abstract class Conversions {
     }
 
      String appendType(String inputStr) {
-         DecimalFormat df = new DecimalFormat("#,##0.0#####");
-        StringBuilder sb = new StringBuilder(df.format(Double.parseDouble(inputStr)));
+         DecimalFormat df = new DecimalFormat("#,##0.0#######################################");
+         //df.setRoundingMode(RoundingMode.FLOOR);
+         StringBuilder sb = new StringBuilder(df.format(Double.parseDouble(inputStr)));
          sb.append(" ");
          sb.append(conversionTypeTwo);
         return (sb.toString());

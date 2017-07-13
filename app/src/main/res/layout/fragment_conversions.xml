@@ -32,7 +32,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingBottom="40dp">
 
         <TextView
             android:id="@+id/from_text_view_id"
@@ -77,8 +78,7 @@
             android:layout_below="@+id/first_spinner"
             android:layout_marginTop="40dp"
             android:layout_alignStart="@+id/first_spinner"
-            android:textAlignment="center"
-            android:paddingBottom="40dp">
+            android:textAlignment="center">
         </Spinner>
 
 

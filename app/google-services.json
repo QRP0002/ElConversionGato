@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "240560587634",
+    "firebase_url": "https://el-conversion-gato.firebaseio.com",
+    "project_id": "el-conversion-gato",
+    "storage_bucket": "el-conversion-gato.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:240560587634:android:b85e367c603ffb87",
+        "android_client_info": {
+          "package_name": "com.quinn.scitools"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "240560587634-nsm4691bi3efd42ichjnctkokhq0a09c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCS5_4dw6yXFkAdbwVsRY0AuAT1jxhXGkM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
