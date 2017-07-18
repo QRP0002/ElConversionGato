@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Window;
 import android.widget.ImageView;
 
@@ -23,7 +24,8 @@ public class SplashScreen extends AppCompatActivity implements
         SplashActivityPresenter.SplashActivityView {
 
     AlertDialog mAlert;
-
+    SplashActivityPresenter presenter;
+    boolean network = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,16 +34,26 @@ public class SplashScreen extends AppCompatActivity implements
         FirebaseMessaging.getInstance().subscribeToTopic("test");
         FirebaseInstanceId.getInstance().getToken();
 
-        SplashActivityPresenter presenter = new SplashActivityPresenter(this);
-        presenter.networkFlow(isNetworkConnected());
+        presenter = new SplashActivityPresenter(this);
+        try {
+            presenter.networkFlow(isNetworkConnected());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         if(mAlert != null) { mAlert.dismiss(); }
-        SplashActivityPresenter presenter = new SplashActivityPresenter(this);
-        presenter.networkFlow(isNetworkConnected());
+        if(!network) {
+            try {
+                presenter.networkFlow(isNetworkConnected());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     @Override
@@ -60,6 +72,7 @@ public class SplashScreen extends AppCompatActivity implements
 
     @Override
     public void startConnectionDialog() {
+        network = false;
         mAlert = new AlertDialog.Builder(this)
                 .setTitle("No Network Connection")
                 .setMessage("Please check that you have a data connection and try again.")

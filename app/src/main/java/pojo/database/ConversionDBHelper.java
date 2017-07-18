@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -15,10 +16,6 @@ public class ConversionDBHelper extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "scitools.sqlite";
     private static final int VERSION = 1;
-    //TYPES TABLE
-    private static final String TYPES_TABLE_NAME   = "conversion_types";
-    private static final String TYPES_COLUMN_ID    = "conversion_type_id";
-    private static final String TYPES_COLUMN_NAMES = "conversion_name";
     //CONVERSION TABLE
     private static final String CONVERSION_TABLE_NAME  = "conversion_information";
     private static final String CONVERSION_COLUMN_ID   = "convert_id";
@@ -34,13 +31,9 @@ public class ConversionDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // TYPE TABLE
-        db.execSQL("create table " + TYPES_TABLE_NAME + "(" +
-         TYPES_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-         TYPES_COLUMN_NAMES + " text " + ")");
         // CONVERSION TABLE
         db.execSQL("CREATE TABLE " + CONVERSION_TABLE_NAME + "(" +
-        CONVERSION_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+        CONVERSION_COLUMN_ID + " INTEGER(35) PRIMARY KEY, " +
         CONVERSION_COLUMN_TYPE + " TEXT, " + CONVERSION_COLUMN_FROM + " TEXT, " +
         CONVERSION_COLUMN_TO + " TEXT, " + CONVERSION_COLUMN_FORM + " TEXT, " +
         CONVERSION_COLUMN_VAL + " TEXT" + ")");
@@ -48,56 +41,10 @@ public class ConversionDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXIST " + TYPES_TABLE_NAME);
+        //db.execSQL("DROP TABLE IF EXIST " + TYPES_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXIST " + CONVERSION_TABLE_NAME);
         onCreate(db);
     }
-
-    /////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////
-    ///////////////////// THESE ARE THE SCRIPTS FOR TYPES TABLE//////////////////////
-    /////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////
-    public void deleteRowsFromTypes() {
-    SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("DELETE from " + TYPES_TABLE_NAME);
-    }
-
-    public boolean insertTypes(String type_name) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put("conversion_name", type_name);
-        db.insert(TYPES_TABLE_NAME, null, cv);
-        return true;
-    }
-
-    public int getTypesRowCount() {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("SELECT * FROM " + TYPES_TABLE_NAME, null);
-        int count = res.getCount();
-        res.close();
-        return count;
-    }
-
-    public ArrayList<String> getTypes() throws NullPointerException {
-        ArrayList<String> typesArray = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        try {
-            Cursor res = db.rawQuery("SELECT * FROM " + TYPES_TABLE_NAME,
-                    null);
-            res.moveToFirst();
-
-            for(int i = 0; i < res.getCount(); i++) {
-                typesArray.add(res.getString(res.getColumnIndex(TYPES_COLUMN_NAMES)));
-                res.moveToNext();
-            }
-            res.close();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
-        return (typesArray.size() > 0 ? typesArray : null);
-    }
-
 
     /////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////
@@ -105,10 +52,11 @@ public class ConversionDBHelper extends SQLiteOpenHelper {
     /////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////
 
-    public boolean insertConversions(String convert_type, String convert_from, String convert_to,
+    /*public boolean insertConversions(int convert_id, String convert_type, String convert_from, String convert_to,
                                      String convert_formula, String convert_value) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
+        cv.put("convert_id", convert_id);
         cv.put("convert_type", convert_type);
         cv.put("convert_from", convert_from);
         cv.put("convert_to", convert_to);
@@ -118,6 +66,34 @@ public class ConversionDBHelper extends SQLiteOpenHelper {
         cv.clear();
         db.close();
         return true;
+    }*/
+
+    public boolean insertConversions(ArrayList<ConversionsDB> list) {
+        final String sqlstmt = "INSERT INTO " + CONVERSION_TABLE_NAME + "("
+                + "convert_id, "
+                + "convert_type, "
+                + "convert_from, "
+                + "convert_to, "
+                + "convert_formula, "
+                + "convert_value"
+                + ") VALUES (?1,?2,?3,?4,?5,?6)";
+        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteStatement stmt = db.compileStatement(sqlstmt);
+        db.beginTransaction();
+
+        for(ConversionsDB temp : list) {
+            stmt.bindLong(1, temp.getId());
+            stmt.bindString(2, temp.getType());
+            stmt.bindString(3, temp.getFrom());
+            stmt.bindString(4, temp.getTo());
+            stmt.bindString(5, temp.getFormula());
+            stmt.bindString(6, temp.getValue());
+            stmt.execute();
+        }
+        db.setTransactionSuccessful();
+        db.endTransaction();
+        stmt.close();
+        return true;
     }
 
     public int getConversionRowCount() {
@@ -126,11 +102,6 @@ public class ConversionDBHelper extends SQLiteOpenHelper {
         int count = res.getCount();
         res.close();
         return count;
-    }
-
-    public void deleteRowsFromConversion() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("DELETE from " + CONVERSION_TABLE_NAME);
     }
 
     public double getNoFormulaValue(String fromIn, String toIn) {
@@ -153,6 +124,23 @@ public class ConversionDBHelper extends SQLiteOpenHelper {
         String formula = res.getString(res.getPosition());
         res.close();
         return formula;
+    }
+
+    public ArrayList<String> getTypeSpinnerData() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<String> tempArray = new ArrayList<>();
+
+        Cursor res = db.rawQuery("SELECT DISTINCT " + CONVERSION_COLUMN_TYPE + " FROM " +
+                CONVERSION_TABLE_NAME, null);
+        res.moveToFirst();
+
+        for(int i = 0; i < res.getCount(); i++) {
+            tempArray.add(res.getString(res.getColumnIndex(CONVERSION_COLUMN_TYPE)));
+            res.moveToNext();
+        }
+
+        res.close();
+        return (tempArray.size() > 0 ? tempArray : null);
     }
 
     public ArrayList<String> getFromSpinnerData(String conversionType) {
@@ -178,6 +166,16 @@ public class ConversionDBHelper extends SQLiteOpenHelper {
         Cursor res = db.rawQuery("SELECT " + CONVERSION_COLUMN_FORM + " FROM " +
                 CONVERSION_TABLE_NAME + " WHERE " + CONVERSION_COLUMN_FROM + " ='" + fromIn + "'" +
         "AND " + CONVERSION_COLUMN_TO + "='" + toIn + "'",null);
+        res.moveToFirst();
+        String resultStr = res.getString(res.getPosition());
+        res.close();
+        return resultStr;
+    }
+
+    public String largestID() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("SELECT MAX(" + CONVERSION_COLUMN_ID + ") FROM " +
+                CONVERSION_TABLE_NAME, null);
         res.moveToFirst();
         String resultStr = res.getString(res.getPosition());
         res.close();
