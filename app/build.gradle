@@ -31,6 +31,8 @@ dependencies {
     })
     // Stetho core
     compile 'com.facebook.stetho:stetho:1.5.0'
+    compile 'com.facebook.stetho:stetho-okhttp3:1.5.0'
+
     //If you want to add a network helper
     compile 'com.facebook.stetho:stetho-okhttp:1.5.0'
     compile 'com.android.volley:volley:1.0.0'
@@ -40,6 +42,9 @@ dependencies {
     compile 'com.android.support:support-v4:25.3.0'
     compile 'com.fathzer:javaluator:3.0.1'
     compile 'com.squareup.okhttp3:okhttp:3.8.0'
+    compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.7'
     compile 'com.google.firebase:firebase-core:10.2.6'
     compile 'com.google.firebase:firebase-messaging:10.2.6'
     // Required -- JUnit 4 framework

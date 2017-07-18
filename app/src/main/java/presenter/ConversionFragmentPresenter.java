@@ -40,7 +40,7 @@ public class ConversionFragmentPresenter {
 
     public void assigningTypeSpinnerArray() {
         db = new ConversionDBHelper(context);
-        view.fillTypeSpinner(db.getTypes());
+        view.fillTypeSpinner(db.getTypeSpinnerData());
     }
 
     public void assigningFromSpinnerArray(String conversionTypeSelected) {
