@@ -1,16 +1,12 @@
 package pojo.database;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
-import android.util.Log;
 
 import java.util.ArrayList;
-
-import static android.content.ContentValues.TAG;
 
 public class ConversionDBHelper extends SQLiteOpenHelper {
 
@@ -51,22 +47,6 @@ public class ConversionDBHelper extends SQLiteOpenHelper {
     //////////////////// THESE ARE THE SCRIPTS FOR CONVERT TABLE/////////////////////
     /////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////
-
-    /*public boolean insertConversions(int convert_id, String convert_type, String convert_from, String convert_to,
-                                     String convert_formula, String convert_value) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put("convert_id", convert_id);
-        cv.put("convert_type", convert_type);
-        cv.put("convert_from", convert_from);
-        cv.put("convert_to", convert_to);
-        cv.put("convert_formula", convert_formula);
-        cv.put("convert_value", convert_value);
-        db.insert(CONVERSION_TABLE_NAME, null, cv);
-        cv.clear();
-        db.close();
-        return true;
-    }*/
 
     public boolean insertConversions(ArrayList<ConversionsDB> list) {
         final String sqlstmt = "INSERT INTO " + CONVERSION_TABLE_NAME + "("

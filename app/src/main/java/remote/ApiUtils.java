@@ -2,10 +2,6 @@ package remote;
 
 import service.ConversionClient;
 
-/**
- * Created by quinn on 7/13/17.
- */
-
 public class ApiUtils {
 
     private ApiUtils() {}
