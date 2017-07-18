@@ -9,14 +9,10 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.Window;
-import android.widget.ImageView;
 
 import com.facebook.stetho.Stetho;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.quinn.scitools.R;
 
 import presenter.SplashActivityPresenter;
 

@@ -125,10 +125,8 @@ public class SplashActivityPresenter {
                     ConversionDBHelper db = new ConversionDBHelper(view);
                     int rowCount = db.getConversionRowCount();
                     if(rowCount == 0) {
-                        Log.d("REMOTE", "REMOTE");
                         sendConversions("getConvertData");
                     } else if(rowCount > 0 && rowCount != remoteCount) {
-                        Log.d("REMOTE", "REMOTE");
                         sendUpdates("getUpdateData",
                                 Integer.toString(db.getConversionRowCount()));
                     } else if (rowCount > 0 && rowCount == remoteCount){
